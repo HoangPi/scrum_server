@@ -77,12 +77,10 @@ public:
 
     info->pathParams["userId"].description = "User Identifier";
   }
-  ENDPOINT("GET", "users/{userId}", getUserById,
-           PATH(Int64, userId),
+  ENDPOINT("GET", "users", getUserById,
            REQUEST(std::shared_ptr<IncomingRequest>, request))
   {
-    OATPP_ASSERT_HTTP(request->getBundleData<oatpp::Int64>("userId") == userId, Status::CODE_401, "Forbidden resource")
-    return createDtoResponse(Status::CODE_200, m_userService.getUserById(userId));
+    return createDtoResponse(Status::CODE_200, m_userService.getUserById(request->getBundleData<oatpp::Int64>("userId")));
   }
 
   ENDPOINT_INFO(verifyUser)

@@ -2,6 +2,7 @@
 #ifndef CRUD_DATABASECOMPONENT_HPP
 #define CRUD_DATABASECOMPONENT_HPP
 
+#include "db/db.hpp"
 #include "db/UserDb.hpp"
 #include <sstream>
 
@@ -34,6 +35,17 @@ public:
   /**
    * Create database client
    */
+  OATPP_CREATE_COMPONENT(std::shared_ptr<MyDB>, myDb)([] {
+
+    /* Get database ConnectionProvider component */
+    OATPP_COMPONENT(std::shared_ptr<oatpp::provider::Provider<oatpp::postgresql::Connection>>, connectionProvider);
+
+    /* Create database-specific Executor */
+    auto executor = std::make_shared<oatpp::postgresql::Executor>(connectionProvider);
+
+    /* Create MyClient database client */
+    return std::make_shared<MyDB>(executor);
+  }());
   OATPP_CREATE_COMPONENT(std::shared_ptr<UserDb>, userDb)([] {
 
     /* Get database ConnectionProvider component */

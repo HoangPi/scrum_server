@@ -31,6 +31,7 @@ class ReturnUserDto : public oatpp::DTO
 
   DTO_FIELD(Int64, id, "id");
   DTO_FIELD(String, userName, "username");
+  DTO_FIELD(String, name, "name");
   DTO_FIELD(String, email, "email");
   DTO_FIELD(String, role, "role");
   DTO_FIELD(Int64, createdAt, "created_at");
