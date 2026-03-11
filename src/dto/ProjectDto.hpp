@@ -19,6 +19,7 @@ class ProjectDto : public oatpp::DTO
     DTO_FIELD(Int32, sprintStartDay, "sprint_start_day");
     DTO_FIELD(Int32, workDayHour, "work_day_hour");
     DTO_FIELD(Int32, defaultDayOff, "default_day_off");
+    DTO_FIELD(Vector<String>, dayOff, "day_off") = nullptr;
 
     DTO_FIELD(String, status, "status");
 };

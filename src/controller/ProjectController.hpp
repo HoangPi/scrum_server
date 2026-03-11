@@ -23,6 +23,7 @@ public:
 private:
     UserService m_userService; // Create user service.
     ProjectService m_projectService;
+
 public:
     static std::shared_ptr<ProjectController> createShared(
         OATPP_COMPONENT(std::shared_ptr<oatpp::web::mime::ContentMappers>, apiContentMappers) // Inject ContentMappers
@@ -48,6 +49,43 @@ public:
         dto->projectOwner = request->getBundleData<Int64>("userId");
         this->m_projectService.createProject(dto);
         return createResponse(Status::CODE_200, nullptr);
+    }
+
+    ENDPOINT_INFO(getProjects)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("GET", "projects", getProjects,
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        return createDtoResponse(
+            Status::CODE_200,
+            m_projectService.getProjects(int(request->getBundleData<Int64>("userId"))));
+    }
+
+    ENDPOINT_INFO(getProjectById)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("GET", "projects/{projectId}", getProjectById,
+             PATH(Int32, projectId)/*,
+             REQUEST(std::shared_ptr<IncomingRequest>, request)*/)
+    {
+        return createDtoResponse(
+            Status::CODE_200,
+            m_projectService.getProjectById(projectId));
     }
 };
 

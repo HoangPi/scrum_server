@@ -13,6 +13,8 @@
 #include "oatpp/web/protocol/http/Http.hpp"
 #include "oatpp/macro/component.hpp"
 
+using namespace oatpp;
+
 class ProjectService
 {
 private:
@@ -23,4 +25,6 @@ private:
     OATPP_COMPONENT(std::shared_ptr<ProjectDb>, m_projectDatabase); // Inject database component
 public:
     void createProject(const oatpp::Object<ProjectDto> &project);
+    Vector<Object<ProjectDto>> getProjects(const Int32 &userId);
+   Object<ProjectDto> getProjectById(const Int32 &projectId);
 };

@@ -17,7 +17,9 @@ CREATE TABLE Project (
 CREATE TABLE Member (
     user_id INT NOT NULL REFERENCES AppUser(id) ON DELETE CASCADE,
     project_id INT NOT NULL REFERENCES Project(id) ON DELETE CASCADE,
-    role TEXT NOT NULL DEFAULT 'EM' CHECK (role IN ('EM', 'PO', 'SM'))
+    role TEXT NOT NULL DEFAULT 'EM' CHECK (role IN ('EM', 'PO', 'SM')),
+
+    PRIMARY KEY (user_id, project_id)
 );
 
 CREATE OR REPLACE FUNCTION create_po_member()
