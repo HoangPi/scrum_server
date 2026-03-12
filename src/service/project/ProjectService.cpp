@@ -49,3 +49,20 @@ Object<ProjectDto> ProjectService::getProjectById(const Int32 &projectId)
     }
     return projects[0];
 }
+
+void ProjectService::createInvite(const Object<InviteDto> &invite, const Int32 &userId)
+{
+    auto dbResult = m_projectDatabase->getMember(userId, invite->projectId);
+    CHECK_SUCCESS;
+    auto members = dbResult->fetch<Vector<Object<MemberDto>>>();
+    OATPP_ASSERT_HTTP(members->size() == 1, Status::CODE_400, "User is not a member of project");
+    OATPP_ASSERT_HTTP(!members[0]->role.equalsCI_ASCII("EM"), Status::CODE_400, "Employee cannot send invite");
+    dbResult = m_projectDatabase->getMember(invite->invitee, invite->projectId);
+    CHECK_SUCCESS;
+    members = dbResult->fetch<Vector<Object<MemberDto>>>();
+    OATPP_ASSERT_HTTP(members->size() == 0, Status::CODE_400, "User has been a member of project already")
+    dbResult = m_projectDatabase->deleteInvite(invite);
+    CHECK_SUCCESS;
+    dbResult = m_projectDatabase->createInvite(invite);
+    CHECK_SUCCESS;
+}

@@ -1,0 +1,9 @@
+CREATE TABLE Notification (
+    id SERIAL PRIMARY KEY,
+    priority INT NOT NULL DEFAULT 0 CHECK (priority BETWEEN 0 AND 2),
+    message TEXT NOT NULL,
+    path TEXT NOT NULL,
+    has_read BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+

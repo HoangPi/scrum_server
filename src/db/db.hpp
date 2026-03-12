@@ -24,6 +24,8 @@ public:
         migration.addFile(1 /* start from version 1 */, DATABASE_MIGRATIONS "/001_init.sql");
         migration.addFile(2, DATABASE_MIGRATIONS "/002.sql");
         migration.addFile(3, DATABASE_MIGRATIONS "/003_project/project.sql");
+        migration.addFile(4, DATABASE_MIGRATIONS "/004_notification.sql");
+        migration.addFile(5, DATABASE_MIGRATIONS "/005_project_invitation.sql");
         // TODO - Add more migrations here.
         migration.migrate(); // <-- run migrations. This guy will throw on error.
 

@@ -80,12 +80,32 @@ public:
         info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
     }
     ENDPOINT("GET", "projects/{projectId}", getProjectById,
-             PATH(Int32, projectId)/*,
-             REQUEST(std::shared_ptr<IncomingRequest>, request)*/)
+             PATH(Int32, projectId) /*,
+              REQUEST(std::shared_ptr<IncomingRequest>, request)*/
+    )
     {
         return createDtoResponse(
             Status::CODE_200,
             m_projectService.getProjectById(projectId));
+    }
+
+    ENDPOINT_INFO(createInvite)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("POST", "invite/projects", createInvite,
+             BODY_DTO(Object<InviteDto>, invite),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        m_projectService.createInvite(invite, int(request->getBundleData<Int64>("userId")));
+
+        return createResponse(Status::CODE_200, nullptr);
     }
 };
 

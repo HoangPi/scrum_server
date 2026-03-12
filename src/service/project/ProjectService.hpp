@@ -21,10 +21,11 @@ private:
     typedef oatpp::web::protocol::http::Status Status;
 
 private:
-    OATPP_COMPONENT(std::shared_ptr<UserDb>, m_userDatabase); // Inject database component
+    OATPP_COMPONENT(std::shared_ptr<UserDb>, m_userDatabase);       // Inject database component
     OATPP_COMPONENT(std::shared_ptr<ProjectDb>, m_projectDatabase); // Inject database component
 public:
     void createProject(const oatpp::Object<ProjectDto> &project);
     Vector<Object<ProjectDto>> getProjects(const Int32 &userId);
-   Object<ProjectDto> getProjectById(const Int32 &projectId);
+    Object<ProjectDto> getProjectById(const Int32 &projectId);
+    void createInvite(const Object<InviteDto> &invite, const Int32 &userId);
 };

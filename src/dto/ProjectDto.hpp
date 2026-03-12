@@ -24,4 +24,25 @@ class ProjectDto : public oatpp::DTO
     DTO_FIELD(String, status, "status");
 };
 
+class InviteDto : public oatpp::DTO
+{
+
+    DTO_INIT(InviteDto, DTO)
+
+    DTO_FIELD(Int32, id, "id");
+    DTO_FIELD(Int32, invitee, "invitee");
+    DTO_FIELD(Int32, projectId, "project_id");
+    DTO_FIELD(String, status, "status") = "created";
+};
+
+class MemberDto : public oatpp::DTO
+{
+
+    DTO_INIT(MemberDto, DTO)
+
+    DTO_FIELD(Int32, userId, "user_id");
+    DTO_FIELD(Int32, projectId, "project_id");
+    DTO_FIELD(String, role, "role");
+};
+
 #include OATPP_CODEGEN_END(DTO)
