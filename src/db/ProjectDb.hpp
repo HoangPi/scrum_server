@@ -71,6 +71,13 @@ public:
             "RETURNING *;",
             PREPARE(true),
             PARAM(oatpp::Object<ProductBacklogDto>, dto));
+
+      QUERY(getProductBacklogs,
+            "SELECT * FROM create_sprint_backlog(:projectId, :offset, :includeFinished)",
+            PREPARE(true),
+            PARAM(oatpp::Int32, projectId),
+            PARAM(oatpp::Int32, offset),
+            PARAM(oatpp::Boolean, includeFinished));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

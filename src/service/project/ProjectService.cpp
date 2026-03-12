@@ -83,3 +83,15 @@ void ProjectService::createProductBacklog(const Int32 &userId, const Object<Prod
     dbResult = m_projectDatabase->createProductBacklog(backlog);
     CHECK_SUCCESS;
 }
+
+Vector<Object<ProductBacklogDto>> ProjectService::getProductBacklogs(const Int32 &userId, const Int32 &projectId, const Int32 &offset, const Boolean &includeFinished)
+{
+    auto dbResult = m_projectDatabase->getMember(userId, projectId);
+    CHECK_SUCCESS;
+    auto members = dbResult->fetch<Vector<Object<MemberDto>>>();
+    OATPP_ASSERT_HTTP(members->size() == 1, Status::CODE_400, "User does not belong to the project");
+
+    dbResult = m_projectDatabase->getProductBacklogs(projectId, offset, includeFinished);
+    CHECK_SUCCESS;
+    return dbResult->fetch<Vector<Object<ProductBacklogDto>>>();
+}
