@@ -4,6 +4,7 @@
 #include "controller/UserController.hpp"
 #include "controller/ProjectController.hpp"
 #include "controller/StaticController.hpp"
+#include "controller/SprintController.hpp"
 
 #include "oatpp-swagger/Controller.hpp"
 
@@ -22,6 +23,7 @@ void run() {
 
   docEndpoints.append(router->addController(UserController::createShared())->getEndpoints());
   docEndpoints.append(router->addController(ProjectController::createShared())->getEndpoints());
+  docEndpoints.append(router->addController(SprintController::createShared())->getEndpoints());
 
   router->addController(oatpp::swagger::Controller::createShared(docEndpoints));
   router->addController(StaticController::createShared());

@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION create_sprint (
     p_project_id INT,
     p_name TEXT,
     p_goal TEXT,
-    p_start_date DATE)
+    p_start_date TEXT)
 RETURNS Sprint AS $$
 DECLARE
     l_sprint_length INT;
@@ -18,8 +18,8 @@ BEGIN
         RAISE EXCEPTION 'Project with ID % not found', p_project_id;
     END IF;
 
-    l_end_date := p_start_date + (l_sprint_length * 7 * INTERVAL '1 day');
-    IF p_start_date < CURRENT_DATE AND CURRENT_DATE < l_end_date THEN
+    l_end_date := p_start_date::DATE + (l_sprint_length * 7 * INTERVAL '1 day') - (INTERVAL '1 day');
+    IF p_start_date::DATE < CURRENT_DATE AND CURRENT_DATE < l_end_date THEN
         l_status = 'on_going'::progress_type;
     ELSE
         l_status = 'created'::progress_type;
@@ -27,9 +27,31 @@ BEGIN
 
     INSERT INTO Sprint (project_id, name, goal, start_date, end_date, status)
     VALUES (p_project_id, p_name, p_goal, 
-        p_start_date, l_end_date, l_status)
+        p_start_date::DATE, l_end_date, l_status)
     RETURNING * INTO l_new_sprint;
     RETURN l_new_sprint;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_sprints_in_between_dates(p_project_id INT, p_start TEXT, p_end TEXT)
+RETURNS TABLE (
+    id INT,
+    project_id INT,
+    name TEXT,
+    goal TEXT,
+    start_date TEXT,
+    end_date TEXT,
+    status TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT s.id, s.project_id, s.name, s.goal, s.start_date::TEXT, s.end_date::TEXT, s.status::TEXT
+    FROM Sprint s
+    WHERE s.project_id = p_project_id 
+        AND s.start_date <= p_end::DATE 
+        AND s.end_date >= p_start::DATE
+    ORDER BY start_date
+    LIMIT 20;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -55,3 +77,12 @@ CREATE TRIGGER trg_check_sprint_status
 BEFORE UPDATE ON Sprint
 FOR EACH ROW
 EXECUTE FUNCTION prevent_finshed_sprint_update();
+
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+
+ALTER TABLE Sprint
+ADD CONSTRAINT exclude_overlapping_sprints
+EXCLUDE USING gist (
+  project_id WITH =,
+  daterange(start_date, end_date, '[]') WITH &&
+);

@@ -5,6 +5,7 @@
 #include "db/db.hpp"
 #include "db/UserDb.hpp"
 #include "db/ProjectDb.hpp"
+#include "db/SprintDb.hpp"
 #include <sstream>
 
 class DatabaseComponent {
@@ -46,6 +47,17 @@ public:
 
     /* Create MyClient database client */
     return std::make_shared<MyDB>(executor);
+  }());
+  OATPP_CREATE_COMPONENT(std::shared_ptr<SprintDb>, sprintDb)([] {
+
+    /* Get database ConnectionProvider component */
+    OATPP_COMPONENT(std::shared_ptr<oatpp::provider::Provider<oatpp::postgresql::Connection>>, connectionProvider);
+
+    /* Create database-specific Executor */
+    auto executor = std::make_shared<oatpp::postgresql::Executor>(connectionProvider);
+
+    /* Create MyClient database client */
+    return std::make_shared<SprintDb>(executor);
   }());
   OATPP_CREATE_COMPONENT(std::shared_ptr<ProjectDb>, projectDb)([] {
 

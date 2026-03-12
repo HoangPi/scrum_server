@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 add_library(crud-lib
         # src/controller/StaticController.hpp
         # src/controller/UserController.hpp
-        src/db/UserDb.hpp
+        # src/controller/UserController.hpp
+        # src/db/UserDb.hpp
         # src/db/db.hpp
         # src/dto/PageDto.hpp
         # src/dto/StatusDto.hpp
@@ -19,6 +20,7 @@ add_library(crud-lib
         src/ErrorHandler.cpp
         src/service/UserService.cpp
         src/service/project/ProjectService.cpp
+        src/service/project/SprintService.cpp
         src/auth/JWT.cpp
         src/auth/AuthHandler.cpp
         src/interceptor/AuthInterceptor.cpp
