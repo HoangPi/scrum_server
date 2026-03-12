@@ -61,6 +61,14 @@ public:
       QUERY(deleteUserById,
             "DELETE FROM AppUser WHERE id=:id;",
             PARAM(oatpp::Int32, id))
+
+      QUERY(getNotifications,
+            "SELECT id, priority, message, path, has_read FROM Notification "
+            "WHERE owner = :userId "
+            "ORDER BY has_read ASC, created_at DESC "
+            " LIMIT 20 OFFSET 20 * :offset;",
+            PARAM(oatpp::Int32, userId),
+            PARAM(oatpp::Int32, offset))
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

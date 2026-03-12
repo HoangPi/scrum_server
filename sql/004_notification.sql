@@ -1,6 +1,7 @@
 CREATE TABLE Notification (
     id SERIAL PRIMARY KEY,
     priority INT NOT NULL DEFAULT 0 CHECK (priority BETWEEN 0 AND 2),
+    owner INT NOT NULL REFERENCES AppUser(id) ON DELETE CASCADE,
     message TEXT NOT NULL,
     path TEXT NOT NULL,
     has_read BOOLEAN NOT NULL DEFAULT false,

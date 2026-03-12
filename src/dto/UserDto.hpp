@@ -46,6 +46,17 @@ class LoginUserDto : public oatpp::DTO
   DTO_FIELD(String, password, "password");
 };
 
+class NotificationDto : public oatpp::DTO
+{
+  DTO_INIT(NotificationDto, DTO)
+
+  DTO_FIELD(Int32, id, "id");
+  DTO_FIELD(Int32, priority, "priority");
+  DTO_FIELD(String, message, "message");
+  DTO_FIELD(String, path, "path");
+  DTO_FIELD(Boolean, isRead, "has_read");
+};
+
 #include OATPP_CODEGEN_END(DTO)
 
 #endif /* UserDto_hpp */

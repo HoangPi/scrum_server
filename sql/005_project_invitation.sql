@@ -47,7 +47,7 @@ BEGIN
     WHERE p.id = NEW.project_id;
     v_message := format('%s has invited you to project %s', v_PO_name, v_project_name);
     v_path := format('invite/project?id=%s', NEW.id);
-    INSERT INTO notification (priority, message, path) VALUES (0, v_message, v_path);
+    INSERT INTO notification (owner, priority, message, path) VALUES (NEW.invitee, 0, v_message, v_path);
     RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;

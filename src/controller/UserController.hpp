@@ -124,6 +124,25 @@ public:
   {
     return createDtoResponse(Status::CODE_200, m_userService.deleteUserById(userId));
   }
+
+  ENDPOINT_INFO(getNotifications)
+  {
+    info->summary = "Get one User by userId";
+
+    info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+    info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+    info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+
+    info->pathParams["userId"].description = "User Identifier";
+  }
+  ENDPOINT("GET", "notifications", getNotifications,
+           QUERY(oatpp::Int32, offset),
+           REQUEST(std::shared_ptr<IncomingRequest>, request))
+  {
+    return createDtoResponse(
+        Status::CODE_200,
+        m_userService.getNotifications(int(request->getBundleData<oatpp::Int64>("userId")), offset));
+  }
 };
 
 #include OATPP_CODEGEN_END(ApiController) //<- End Codegen

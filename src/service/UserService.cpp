@@ -63,3 +63,10 @@ oatpp::Object<StatusDto> UserService::deleteUserById(const oatpp::Int32 &id)
 {
     return oatpp::Object<StatusDto>();
 }
+
+oatpp::Vector<oatpp::Object<NotificationDto>> UserService::getNotifications(const oatpp::Int32 &userId, const oatpp::Int32 &offset)
+{
+    auto dbResult = m_database->getNotifications(userId, offset);
+    OATPP_ASSERT_HTTP(dbResult->isSuccess(), Status::CODE_500, dbResult->getErrorMessage());
+    return dbResult->fetch<oatpp::Vector<oatpp::Object<NotificationDto>>>();
+}
