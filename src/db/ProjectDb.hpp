@@ -50,6 +50,13 @@ public:
             PREPARE(false),
             PARAM(oatpp::Object<InviteDto>, dto));
 
+      QUERY(updateInvite,
+            "SELECT * FROM update_invite(:inviteId, :userId, :accept)",
+            PREPARE(true),
+            PARAM(oatpp::Int32, userId),
+            PARAM(oatpp::Int32, inviteId),
+            PARAM(oatpp::Boolean, accept));
+
       QUERY(getMember,
             "SELECT * FROM Member WHERE project_id = :project_id AND user_id = :user_id",
             PREPARE(true),

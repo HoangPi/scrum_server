@@ -80,3 +80,21 @@ CREATE TRIGGER trg_auto_add_member
 AFTER UPDATE ON invite
 FOR EACH ROW
 EXECUTE FUNCTION add_member_on_accepted();
+
+CREATE OR REPLACE FUNCTION update_invite(p_id INT, p_user_id INT, p_accept BOOLEAN)
+RETURNS VOID AS $$
+BEGIN
+    IF EXISTS (
+        SELECT * FROM Invite
+        WHERE id = p_id AND invitee = p_user_id AND status = 'created'::invitation_status
+    ) THEN 
+        IF p_accept THEN
+            UPDATE Invite SET status = 'accepted'::invitation_status WHERE id = p_id;
+        ELSE 
+            UPDATE Invite SET status = 'declined'::invitation_status WHERE id = p_id;
+        END IF;
+        RETURN;
+    END IF;
+    RAISE EXCEPTION 'Invitation expired or does not exist';
+END;
+$$ LANGUAGE plpgsql;

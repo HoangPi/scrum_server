@@ -66,3 +66,9 @@ void ProjectService::createInvite(const Object<InviteDto> &invite, const Int32 &
     dbResult = m_projectDatabase->createInvite(invite);
     CHECK_SUCCESS;
 }
+
+void ProjectService::updateInvite(const Int32 &userId, const Int32 &inviteId, const Boolean &accept)
+{
+    auto dbResult = m_projectDatabase->updateInvite(userId, inviteId, accept);
+    CHECK_SUCCESS;
+}
