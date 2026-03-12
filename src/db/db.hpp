@@ -28,6 +28,7 @@ public:
         migration.addFile(5, DATABASE_MIGRATIONS "/005_project_invitation.sql");
         migration.addFile(6, DATABASE_MIGRATIONS "/006_product_backlog.sql");
         migration.addFile(7, DATABASE_MIGRATIONS "/007_sprint_functions.sql");
+        migration.addFile(8, DATABASE_MIGRATIONS "/008_sprint_backlog_functions.sql");
         // TODO - Add more migrations here.
         migration.migrate(); // <-- run migrations. This guy will throw on error.
 

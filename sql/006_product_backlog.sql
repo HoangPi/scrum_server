@@ -35,8 +35,8 @@ CREATE TABLE SprintBacklog (
 
     status progress_type NOT NULL DEFAULT 'created'::progress_type,
     notes TEXT DEFAULT '',
-    estimated_story_point INT CHECK (estimated_story_point >= 0),
-    actual_story_point INT CHECK (actual_story_point >= 0),
+    estimated_story_point INT NOT NULL DEFAULT 0 CHECK (estimated_story_point >= 0),
+    actual_story_point INT NOT NULL DEFAULT 0 CHECK (actual_story_point >= 0),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (sprint_id, backlog_item_id)

@@ -29,4 +29,5 @@ private:
 public:
     void createSprint(const Int32 &userId, const Object<CreateSprintDto> &sprint);
     Vector<Object<SprintDto>> getSprints(const Int32 &userId, const Int32 &projectId, const String &start, const String &end);
+    void createSprintBacklog(const Int32 &userId, const Object<CreateSprintBacklogDto> &dto);
 };
