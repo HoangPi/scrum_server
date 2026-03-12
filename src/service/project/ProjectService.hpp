@@ -29,4 +29,5 @@ public:
     Object<ProjectDto> getProjectById(const Int32 &projectId);
     void createInvite(const Object<InviteDto> &invite, const Int32 &userId);
     void updateInvite(const Int32 &userId, const Int32 &inviteId, const Boolean &accept);
+    void createProductBacklog(const Int32 &userId, const Object<ProductBacklogDto> &backlog);
 };

@@ -72,3 +72,14 @@ void ProjectService::updateInvite(const Int32 &userId, const Int32 &inviteId, co
     auto dbResult = m_projectDatabase->updateInvite(userId, inviteId, accept);
     CHECK_SUCCESS;
 }
+
+void ProjectService::createProductBacklog(const Int32 &userId, const Object<ProductBacklogDto> &backlog)
+{
+    auto dbResult = m_projectDatabase->getMember(userId, backlog->projectId);
+    CHECK_SUCCESS;
+    auto members = dbResult->fetch<Vector<Object<MemberDto>>>();
+    OATPP_ASSERT_HTTP(members->size() == 1, Status::CODE_400, "User does not belong to the project");
+    OATPP_ASSERT_HTTP(!members[0]->role.equalsCI_ASCII("EM"), Status::CODE_400, "Only SM and PO has the authority to create product backlog");
+    dbResult = m_projectDatabase->createProductBacklog(backlog);
+    CHECK_SUCCESS;
+}

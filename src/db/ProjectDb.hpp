@@ -62,6 +62,15 @@ public:
             PREPARE(true),
             PARAM(oatpp::Int32, user_id),
             PARAM(oatpp::Int32, project_id));
+
+      QUERY(createProductBacklog,
+            "INSERT INTO ProductBacklog "
+            "(project_id, name, acceptance_criteria, priority, story_point) "
+            "VALUES "
+            "(:dto.project_id, :dto.name, :dto.acceptance_criteria, :dto.priority, :dto.story_point) "
+            "RETURNING *;",
+            PREPARE(true),
+            PARAM(oatpp::Object<ProductBacklogDto>, dto));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

@@ -45,4 +45,18 @@ class MemberDto : public oatpp::DTO
     DTO_FIELD(String, role, "role");
 };
 
+class ProductBacklogDto : public oatpp::DTO
+{
+
+    DTO_INIT(ProductBacklogDto, DTO)
+
+    DTO_FIELD(Int32, id, "id");
+    DTO_FIELD(Int32, projectId, "project_id");
+    DTO_FIELD(String, name, "name");
+    DTO_FIELD(String, acceptanceCriteria, "acceptance_criteria");
+    DTO_FIELD(Int32, priority, "priority");
+    DTO_FIELD(String, status, "status") = "created";
+    DTO_FIELD(Int32, storyPoint, "story_point");
+};
+
 #include OATPP_CODEGEN_END(DTO)

@@ -119,12 +119,30 @@ public:
         info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
     }
     ENDPOINT("POST", "invite/project", updateInvite,
-             BODY_DTO(Object<InviteDto>, invite),
+            //  BODY_DTO(Object<InviteDto>, invite),
              QUERY(Int32, id),
              QUERY(oatpp::Boolean, accept),
              REQUEST(std::shared_ptr<IncomingRequest>, request))
     {
         m_projectService.updateInvite(int(request->getBundleData<Int64>("userId")), id, accept);
+        return createResponse(Status::CODE_200, nullptr);
+    }
+
+    ENDPOINT_INFO(createBacklog)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("POST", "project/backlog", createBacklog,
+             BODY_DTO(Object<ProductBacklogDto>, backlog),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        m_projectService.createProductBacklog(int(request->getBundleData<Int64>("userId")), backlog);
         return createResponse(Status::CODE_200, nullptr);
     }
 };
