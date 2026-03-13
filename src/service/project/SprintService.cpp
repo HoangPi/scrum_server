@@ -42,3 +42,15 @@ void SprintService::createSprintBacklog(const Int32 &userId, const Object<Create
     dbResult = m_sprintDatabase->createSprintBackLog(dto);
     CHECK_SUCCESS;
 }
+
+Vector<Object<SprintBacklogDetailDto>> SprintService::getSprintBacklogs(const Int32 &userId, const Int32 &sprintId)
+{
+    auto dbResult = m_sprintDatabase->getMemberByUserIdAndSprintId(userId, sprintId);
+    CHECK_SUCCESS;
+    auto members = dbResult->fetch<Vector<Object<MemberDto>>>();
+    OATPP_ASSERT_HTTP(members->size() == 1, Status::CODE_400, "User does not belong to the project");
+
+    dbResult = m_sprintDatabase->getSprintBacklogBySprintId(sprintId);
+    CHECK_SUCCESS;
+    return dbResult->fetch<Vector<Object<SprintBacklogDetailDto>>>();
+}

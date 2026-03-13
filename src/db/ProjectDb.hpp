@@ -73,7 +73,7 @@ public:
             PARAM(oatpp::Object<ProductBacklogDto>, dto));
 
       QUERY(getProductBacklogs,
-            "SELECT * FROM create_sprint_backlog(:projectId, :offset, :includeFinished)",
+            "SELECT * FROM get_product_backlog(:projectId, :offset, :includeFinished)",
             PREPARE(true),
             PARAM(oatpp::Int32, projectId),
             PARAM(oatpp::Int32, offset),

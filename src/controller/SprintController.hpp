@@ -25,7 +25,7 @@ public:
 private:
     UserService m_userService;       // Create user service.
     ProjectService m_projectService; // Create user service.
-    SprintService m_sprintService; // Create user service.
+    SprintService m_sprintService;   // Create user service.
 public:
     static std::shared_ptr<SprintController> createShared(
         OATPP_COMPONENT(std::shared_ptr<oatpp::web::mime::ContentMappers>, apiContentMappers) // Inject ContentMappers
@@ -99,12 +99,29 @@ public:
         info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
         info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
     }
-    ENDPOINT("DELTE/{sprintBackLogId}", "sprints/backlog", removeSprintBacklog,
+    ENDPOINT("DELTE", "sprints/{sprintBackLogId}", removeSprintBacklog,
              PATH(Int32, sprintBackLogId),
              REQUEST(std::shared_ptr<IncomingRequest>, request))
     {
         // m_sprintService.createSprintBacklog(int(request->getBundleData<Int64>("userId")), dto);
         return createResponse(Status::CODE_200, nullptr);
+    }
+
+    ENDPOINT_INFO(getSprintBacklogs)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("GET", "sprints/backlog", getSprintBacklogs,
+             QUERY(Int32, sprintId),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        return createDtoResponse(Status::CODE_200, m_sprintService.getSprintBacklogs(int(request->getBundleData<Int64>("userId")), sprintId));
     }
 };
 
