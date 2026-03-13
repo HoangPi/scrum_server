@@ -20,7 +20,10 @@ Vector<Object<SprintDto>> SprintService::getSprints(const Int32 &userId, const I
 void SprintService::createSprintBacklog(const Int32 &userId, const Object<CreateSprintBacklogDto> &dto)
 {
     m_sprintDatabase->checkMemberExist<POSM, Sid>(userId, dto->sprintId);
-    m_sprintDatabase->checkMemberExist<EM, Sid>(dto->taskOwner, dto->sprintId);
+    if (dto->taskOwner)
+    {
+        m_sprintDatabase->checkMemberExist<EM, Sid>(dto->taskOwner, dto->sprintId);
+    }
     auto dbResult = m_sprintDatabase->createSprintBackLog(dto);
     CHECK_SUCCESS;
 }
@@ -37,5 +40,24 @@ void SprintService::deleteSprintBacklog(const Int32 &userId, const Int32 &sprint
 {
     m_sprintDatabase->checkMemberExist<POSM, Sid>(userId, sprintId);
     auto dbResult = m_sprintDatabase->deleteBacklogById(sprintBacklogId, sprintId);
+    CHECK_SUCCESS;
+}
+
+void SprintService::updateSprintBacklog(const Int32 &userId, const Object<UpdateSprintBacklogDto> &sprintBacklog)
+{
+    if (sprintBacklog->status.equalsCI_ASCII("finished") || sprintBacklog->status.equalsCI_ASCII("failed"))
+    {
+        m_sprintDatabase->checkMemberExist<POSM, Bid>(userId, sprintBacklog->id);
+    }
+    if (sprintBacklog->taskOwner)
+    {
+        m_sprintDatabase->checkMemberExist<EM, Bid>(sprintBacklog->taskOwner, sprintBacklog->id);
+        m_sprintDatabase->checkMemberExist<POSM, Bid>(userId, sprintBacklog->id);
+    }
+    else
+    {
+        m_sprintDatabase->checkMemberExist<EM, Bid>(userId, sprintBacklog->id);
+    }
+    auto dbResult = m_sprintDatabase->updateSprintBacklog(sprintBacklog);
     CHECK_SUCCESS;
 }

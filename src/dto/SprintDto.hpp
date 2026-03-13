@@ -47,6 +47,16 @@ class CreateSprintBacklogDto : public oatpp::DTO
     DTO_FIELD(String, note, "note");                          // maps to p_note
 };
 
+class UpdateSprintBacklogDto : public oatpp::DTO
+{
+    DTO_INIT(UpdateSprintBacklogDto, DTO)
+
+    DTO_FIELD(Int32, id, "id");
+    DTO_FIELD(Int32, taskOwner, "taskOwner") = nullptr;
+    DTO_FIELD(String, note, "notes") = nullptr;
+    DTO_FIELD(String, status, "status") = nullptr;
+};
+
 class SprintBacklogDetailDto : public oatpp::DTO
 {
     DTO_INIT(SprintBacklogDetailDto, DTO)

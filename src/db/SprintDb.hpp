@@ -31,6 +31,9 @@ struct Pid
 struct Sid
 {
 };
+struct Bid
+{
+};
 
 using namespace oatpp;
 
@@ -67,6 +70,15 @@ public:
             PARAM(Int32, userId),
             PARAM(Int32, sprintId));
 
+      QUERY(getMemberByUserIdAndSprintBacklogId,
+            "SELECT m.user_id, m.project_id, m.role FROM SprintBacklog sb "
+            "INNER JOIN Sprint s ON s.id = sb.sprint_id "
+            "INNER JOIN Member m ON s.project_id = m.project_id AND m.user_id = :userId "
+            "WHERE sb.id = :backlogId",
+            PREPARE(true),
+            PARAM(Int32, userId),
+            PARAM(Int32, backlogId));
+
       QUERY(createSprintBackLog,
             "SELECT create_sprint_backlog(:dto.sprint_id, :dto.product_backlog_id, :dto.task_owner, "
             ":dto.note);",
@@ -84,7 +96,8 @@ public:
             std::shared_ptr<oatpp::orm::QueryResult> dbResult;
             if constexpr (std::is_same_v<id, Pid>)
                   dbResult = this->getMember(userId, programId);
-
+            if constexpr (std::is_same_v<id, Bid>)
+                  dbResult = this->getMemberByUserIdAndSprintBacklogId(userId, programId);
             if constexpr (std::is_same_v<id, Sid>)
                   dbResult = this->getMemberByUserIdAndSprintId(userId, programId);
             OATPP_ASSERT_HTTP(dbResult->isSuccess(), oatpp::web::protocol::http::Status::CODE_500, dbResult->getErrorMessage());
@@ -100,10 +113,16 @@ public:
                   OATPP_ASSERT_HTTP(!members[0]->role.equalsCI_ASCII("EM"), oatpp::web::protocol::http::Status::CODE_400, "Only SM or PO can have authority for this action");
       };
 
-      QUERY(deleteBacklogById, "DELETE FROM SprintBacklog sb WHERE id = :backlogId AND sb.sprint_id = :sprintId",
+      QUERY(deleteBacklogById,
+            "DELETE FROM SprintBacklog sb WHERE id = :backlogId AND sb.sprint_id = :sprintId",
             PREPARE(true),
             PARAM(Int32, backlogId),
             PARAM(Int32, sprintId));
+
+      QUERY(updateSprintBacklog,
+            "SELECT update_sprint_backlog(:dto.id, :dto.taskOwner, :dto.status, :dto.notes)",
+            PREPARE(true),
+            PARAM(Object<UpdateSprintBacklogDto>, dto));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

@@ -124,6 +124,24 @@ public:
     {
         return createDtoResponse(Status::CODE_200, m_sprintService.getSprintBacklogs(int(request->getBundleData<Int64>("userId")), sprintId));
     }
+
+    ENDPOINT_INFO(updateSprintBacklog)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("PUT", "sprints/backlog", updateSprintBacklog,
+             BODY_DTO(Object<UpdateSprintBacklogDto>, dto),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        m_sprintService.updateSprintBacklog(int(request->getBundleData<Int64>("userId")), dto);
+        return createResponse(Status::CODE_200, nullptr);
+    }
 };
 
 #include OATPP_CODEGEN_END(ApiController) //<- End Codegen

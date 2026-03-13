@@ -14,6 +14,7 @@ add_library(crud-lib
         src/dto/PageDto.hpp
         src/dto/StatusDto.hpp
         src/dto/UserDto.hpp
+        src/dto/SprintDto.hpp
         src/service/UserService.hpp
         src/AppComponent.hpp
         src/DatabaseComponent.hpp
