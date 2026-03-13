@@ -7,10 +7,30 @@
 #include "dto/UserDto.hpp"
 #include "dto/SprintDto.hpp"
 #include "oatpp-postgresql/orm.hpp"
+#include "oatpp/web/protocol/http/Http.hpp"
 
 #include "oatpp/base/Log.hpp"
 
 #include OATPP_CODEGEN_BEGIN(DbClient) //<- Begin Codegen
+
+struct PO
+{
+};
+struct EM
+{
+};
+struct SM
+{
+};
+struct POSM
+{
+};
+struct Pid
+{
+};
+struct Sid
+{
+};
 
 using namespace oatpp;
 
@@ -33,6 +53,12 @@ public:
             PREPARE(true),
             PARAM(Object<CreateSprintDto>, dto));
 
+      QUERY(getMember,
+            "SELECT * FROM Member WHERE project_id = :project_id AND user_id = :user_id",
+            PREPARE(true),
+            PARAM(oatpp::Int32, user_id),
+            PARAM(oatpp::Int32, project_id));
+
       QUERY(getMemberByUserIdAndSprintId,
             "SELECT m.user_id, m.project_id, m.role FROM Member m "
             "INNER JOIN Sprint s ON s.project_id = m.project_id "
@@ -50,6 +76,33 @@ public:
       QUERY(getSprintBacklogBySprintId,
             "SELECT * FROM get_sprint_backlog_by_sprint_id(:sprintId);",
             PREPARE(true),
+            PARAM(Int32, sprintId));
+
+      template <typename role, typename id>
+      void checkMemberExist(const Int32 &userId, const Int32 &programId)
+      {
+            std::shared_ptr<oatpp::orm::QueryResult> dbResult;
+            if constexpr (std::is_same_v<id, Pid>)
+                  dbResult = this->getMember(userId, programId);
+
+            if constexpr (std::is_same_v<id, Sid>)
+                  dbResult = this->getMemberByUserIdAndSprintId(userId, programId);
+            OATPP_ASSERT_HTTP(dbResult->isSuccess(), oatpp::web::protocol::http::Status::CODE_500, dbResult->getErrorMessage());
+            auto members = dbResult->fetch<Vector<Object<MemberDto>>>();
+            OATPP_ASSERT_HTTP(members->size() == 1, oatpp::web::protocol::http::Status::CODE_400, "User does not belong to the project");
+            if constexpr (std::is_same_v<role, EM>)
+                  return;
+            if constexpr (std::is_same_v<role, PO>)
+                  OATPP_ASSERT_HTTP(members[0]->role.equalsCI_ASCII("PO"), oatpp::web::protocol::http::Status::CODE_400, "Only PO can have authority for this action");
+            if constexpr (std::is_same_v<role, SM>)
+                  OATPP_ASSERT_HTTP(members[0]->role.equalsCI_ASCII("SM"), oatpp::web::protocol::http::Status::CODE_400, "Only SM can have authority for this action");
+            if constexpr (std::is_same_v<role, POSM>)
+                  OATPP_ASSERT_HTTP(!members[0]->role.equalsCI_ASCII("EM"), oatpp::web::protocol::http::Status::CODE_400, "Only SM or PO can have authority for this action");
+      };
+
+      QUERY(deleteBacklogById, "DELETE FROM SprintBacklog sb WHERE id = :backlogId AND sb.sprint_id = :sprintId",
+            PREPARE(true),
+            PARAM(Int32, backlogId),
             PARAM(Int32, sprintId));
 };
 

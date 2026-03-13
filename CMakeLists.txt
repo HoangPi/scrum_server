@@ -4,19 +4,21 @@ project(crud)
 set(CMAKE_CXX_STANDARD 17)
 
 add_library(crud-lib
-        # src/controller/StaticController.hpp
-        # src/controller/UserController.hpp
-        # src/controller/UserController.hpp
-        # src/db/UserDb.hpp
-        # src/db/db.hpp
-        # src/dto/PageDto.hpp
-        # src/dto/StatusDto.hpp
-        # src/dto/UserDto.hpp
-        # src/service/UserService.hpp
-        # src/AppComponent.hpp
-        # src/DatabaseComponent.hpp
-        # src/SwaggerComponent.hpp
-        # src/ErrorHandler.hpp
+        src/controller/StaticController.hpp
+        src/controller/UserController.hpp
+        src/controller/UserController.hpp
+        src/controller/SprintController.hpp
+        src/db/UserDb.hpp
+        src/db/SprintDb.hpp
+        src/db/db.hpp
+        src/dto/PageDto.hpp
+        src/dto/StatusDto.hpp
+        src/dto/UserDto.hpp
+        src/service/UserService.hpp
+        src/AppComponent.hpp
+        src/DatabaseComponent.hpp
+        src/SwaggerComponent.hpp
+        src/ErrorHandler.hpp
         src/ErrorHandler.cpp
         src/service/UserService.cpp
         src/service/project/ProjectService.cpp

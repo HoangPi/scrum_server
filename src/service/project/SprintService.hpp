@@ -31,4 +31,5 @@ public:
     Vector<Object<SprintDto>> getSprints(const Int32 &userId, const Int32 &projectId, const String &start, const String &end);
     void createSprintBacklog(const Int32 &userId, const Object<CreateSprintBacklogDto> &dto);
     Vector<Object<SprintBacklogDetailDto>> getSprintBacklogs(const Int32 &userId, const Int32 &sprintId);
+    void deleteSprintBacklog(const Int32 &userId, const Int32 &sprintId, const Int32 &sprintBacklogId);
 };

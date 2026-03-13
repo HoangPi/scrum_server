@@ -99,11 +99,12 @@ public:
         info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
         info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
     }
-    ENDPOINT("DELTE", "sprints/{sprintBackLogId}", removeSprintBacklog,
+    ENDPOINT("DELETE", "sprints/${sprintId}/${sprintBackLogId}", removeSprintBacklog,
              PATH(Int32, sprintBackLogId),
+             PATH(Int32, sprintId),
              REQUEST(std::shared_ptr<IncomingRequest>, request))
     {
-        // m_sprintService.createSprintBacklog(int(request->getBundleData<Int64>("userId")), dto);
+        m_sprintService.deleteSprintBacklog(int(request->getBundleData<Int64>("userId")), sprintId, sprintBackLogId);
         return createResponse(Status::CODE_200, nullptr);
     }
 
