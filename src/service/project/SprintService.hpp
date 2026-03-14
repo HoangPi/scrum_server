@@ -21,11 +21,27 @@ class SprintService
 {
 private:
     typedef oatpp::web::protocol::http::Status Status;
+    struct pair
+    {
+        int p1;
+        int p2;
+    };
+    static inline bool checkPairExists(const std::vector<pair> &pairs, const pair &p)
+    {
+        for (auto &&i : pairs)
+        {
+            if (i.p1 == p.p1 && i.p2 == p.p2)
+            {
+                return true;
+            }
+        }
+        return false;
+    };
 
 private:
     OATPP_COMPONENT(std::shared_ptr<UserDb>, m_userDatabase);       // Inject database component
     OATPP_COMPONENT(std::shared_ptr<ProjectDb>, m_projectDatabase); // Inject database component
-    OATPP_COMPONENT(std::shared_ptr<SprintDb>, m_sprintDatabase); // Inject database component
+    OATPP_COMPONENT(std::shared_ptr<SprintDb>, m_sprintDatabase);   // Inject database component
 public:
     void createSprint(const Int32 &userId, const Object<CreateSprintDto> &sprint);
     Vector<Object<SprintDto>> getSprints(const Int32 &userId, const Int32 &projectId, const String &start, const String &end);
@@ -33,4 +49,5 @@ public:
     Vector<Object<SprintBacklogDetailDto>> getSprintBacklogs(const Int32 &userId, const Int32 &sprintId);
     void deleteSprintBacklog(const Int32 &userId, const Int32 &sprintId, const Int32 &sprintBacklogId);
     void updateSprintBacklog(const Int32 &userId, const Object<UpdateSprintBacklogDto> &sprintBacklog);
+    void bulkUpdateTasks(const Int32 &userId, const Object<UpdateTasksDto> &tasks);
 };

@@ -95,3 +95,31 @@ CREATE TRIGGER trg_auto_handle_story_points
 AFTER UPDATE ON Task
 FOR EACH ROW
 EXECUTE FUNCTION handle_story_point_update();
+
+CREATE OR REPLACE FUNCTION auto_add_point()
+RETURNS trigger
+AS $$
+BEGIN
+    UPDATE SprintBacklog SET actual_story_point = actual_story_point + NEW.story_point WHERE id = NEW.sprint_backlog_id;
+	RETURN NULL;
+END $$ language plpgsql;
+
+CREATE TRIGGER trg_auto_handle_story_points_on_create
+AFTER INSERT ON Task
+FOR EACH ROW
+WHEN (NEW.finished)
+EXECUTE FUNCTION auto_add_point();
+
+CREATE OR REPLACE FUNCTION auto_remove_point()
+RETURNS trigger
+AS $$
+BEGIN
+    UPDATE SprintBacklog SET actual_story_point = actual_story_point - OLD.story_point WHERE id = OLD.sprint_backlog_id;
+	RETURN NULL;
+END $$ language plpgsql;
+
+CREATE TRIGGER trg_auto_handle_story_points_on_remove
+AFTER DELETE ON Task
+FOR EACH ROW
+WHEN (OLD.finished)
+EXECUTE FUNCTION auto_remove_point();

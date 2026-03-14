@@ -123,6 +123,29 @@ public:
             "SELECT update_sprint_backlog(:dto.id, :dto.taskOwner, :dto.status, :dto.notes)",
             PREPARE(true),
             PARAM(Object<UpdateSprintBacklogDto>, dto));
+
+      QUERY(createTask,
+            "INSERT INTO Task (user_id, sprint_backlog_id, story_point, finished, name) VALUES "
+            "(:dto.user_id, :dto.sprint_backlog_id, :dto.story_point, :dto.finished, :dto.name);",
+            PREPARE(true),
+            PARAM(Object<TaskDto>, dto));
+
+      QUERY(updateTask,
+            "UPDATE Task SET "
+            "  user_id = :dto.user_id, "
+            "  story_point = :dto.story_point, "
+            "  finished = CAST(:dto.finished AS BOOLEAN), "
+            "  name = :dto.name "
+            "WHERE id = :dto.id AND sprint_backlog_id = :dto.sprint_backlog_id;",
+            PREPARE(true),
+            PARAM(Object<TaskDto>, dto));
+
+      // DELETE: Deletes based on both ID and Sprint Backlog ID for extra safety.
+      QUERY(deleteTask,
+            "DELETE FROM Task "
+            "WHERE id = :dto.id AND sprint_backlog_id = :dto.sprint_backlog_id;",
+            PREPARE(true),
+            PARAM(Object<TaskDto>, dto));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

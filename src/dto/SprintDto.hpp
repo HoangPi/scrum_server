@@ -77,6 +77,25 @@ class SprintBacklogDetailDto : public oatpp::DTO
     DTO_FIELD(Int32, actualStoryPoint, "actual_story_point");
 };
 
-#include OATPP_CODEGEN_END(DTO)
+class TaskDto : public oatpp::DTO
+{
+    DTO_INIT(TaskDto, DTO)
+
+    DTO_FIELD(Int32, id, "id");
+    DTO_FIELD(Int32, taskOwner, "user_id") = nullptr;
+    DTO_FIELD(Int32, sprintBacklogId, "sprint_backlog_id") = nullptr;
+    DTO_FIELD(Int32, storyPoint, "story_point") = 0;
+    DTO_FIELD(Boolean, finished, "finished") = false;
+    DTO_FIELD(String, name, "name") = "";
+};
+
+class UpdateTasksDto : public oatpp::DTO
+{
+    DTO_INIT(UpdateTasksDto, DTO)
+
+    DTO_FIELD(Vector<Object<TaskDto>>, create, "create") = nullptr;
+    DTO_FIELD(Vector<Object<TaskDto>>, update, "update") = nullptr;
+    DTO_FIELD(Vector<Object<TaskDto>>, deleted, "deleted") = nullptr;
+};
 
 #include OATPP_CODEGEN_END(DTO)

@@ -97,7 +97,7 @@ BEGIN
         sb.estimated_story_point, sb.actual_story_point
     FROM SprintBacklog sb
     INNER JOIN ProductBacklog pb ON pb.id = sb.backlog_item_id
-    INNER JOIN AppUser m ON m.id = sb.task_owner
+    LEFT JOIN AppUser m ON m.id = sb.task_owner
     WHERE sb.sprint_id = p_sprint_id;
 END;
 $$ LANGUAGE plpgsql;
