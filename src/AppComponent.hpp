@@ -19,6 +19,7 @@
 #include "oatpp/json/ObjectMapper.hpp"
 
 #include "oatpp/macro/component.hpp"
+#include "interceptor/Cors.hpp"
 
 /**
  *  Class which creates and holds Application components and registers components in oatpp::base::Environment
@@ -86,8 +87,9 @@ public:
     auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
     connectionHandler->setErrorHandler(std::make_shared<ErrorHandler>(contentMappers));
 
-    connectionHandler->addRequestInterceptor(std::make_shared<oatpp::web::server::interceptor::AllowOptionsGlobal>());
     connectionHandler->addRequestInterceptor(std::make_shared<AuthInterceptor>(jwt));
+    connectionHandler->addResponseInterceptor(std::make_shared<MyCorsInterceptor>());
+    connectionHandler->addRequestInterceptor(std::make_shared<oatpp::web::server::interceptor::AllowOptionsGlobal>());
 
     connectionHandler->addResponseInterceptor(std::make_shared<oatpp::web::server::interceptor::AllowCorsGlobal>());
     return connectionHandler;
