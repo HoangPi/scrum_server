@@ -78,6 +78,14 @@ public:
             PARAM(oatpp::Int32, projectId),
             PARAM(oatpp::Int32, offset),
             PARAM(oatpp::Boolean, includeFinished));
+
+      QUERY(getUserByProjectIdAndEmail,
+            "SELECT u.id, name, email FROM Member m "
+            "INNER JOIN AppUser u ON u.id = m.user_id "
+            "WHERE u.email LIKE :likeEmail AND m.project_id = :projectId LIMIT 6",
+            PREPARE(false),
+            PARAM(oatpp::Int32, projectId),
+            PARAM(oatpp::String, likeEmail));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

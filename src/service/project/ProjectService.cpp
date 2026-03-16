@@ -95,3 +95,12 @@ Vector<Object<ProductBacklogDto>> ProjectService::getProductBacklogs(const Int32
     CHECK_SUCCESS;
     return dbResult->fetch<Vector<Object<ProductBacklogDto>>>();
 }
+
+Vector<Object<MemberInfo>> ProjectService::getMemberByEmailAndProjectId(const Int32 &userId, const String &email, const Int32 &projectId)
+{
+    m_sprintDatabase->checkMemberExist<EM, Pid>(userId, projectId);
+    String likeEmail = "%" + email + "%";
+    auto dbResult = m_projectDatabase->getUserByProjectIdAndEmail(projectId, likeEmail);
+    CHECK_SUCCESS;
+    return dbResult->fetch<Vector<Object<MemberInfo>>>();
+}

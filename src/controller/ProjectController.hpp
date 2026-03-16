@@ -174,6 +174,26 @@ public:
                 std::atoi(queryParams.get("offset").get() ? queryParams.get("offset")->c_str() : "0"),
                 i));
     }
+
+    ENDPOINT_INFO(getMemberByEmail)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("GET", "project/member", getMemberByEmail,
+             QUERY(String, email),
+             QUERY(Int32, projectId),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        return createDtoResponse(
+            Status::CODE_200,
+            m_projectService.getMemberByEmailAndProjectId(int(request->getBundleData<Int64>("userId")), email, projectId));
+    }
 };
 
 #include OATPP_CODEGEN_END(ApiController) //<- End Codegen
