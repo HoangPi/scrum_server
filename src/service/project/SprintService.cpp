@@ -73,24 +73,26 @@ void SprintService::bulkUpdateTasks(const Int32 &userId, const Object<UpdateTask
         {
             for (size_t i = 0; i < tasks->create->size(); i++)
             {
-                auto &item = tasks->create[i];
-                // Check Task Owner + Backlog pair
-                const pair p1 = {*item->taskOwner, *item->sprintBacklogId};
+                int defaultId = 0;
+
+                // Check Current User + Backlog pair (Verify requester has access)
+                const pair p2 = {*userId, tasks->create[i]->sprintBacklogId.getValue(defaultId)};
+                if (!checkPairExists(pairs, p2))
+                {
+                    pairs.push_back({0, p2.p2});
+                    m_sprintDatabase->checkMemberExist<EM, Bid>(userId, tasks->create[i]->sprintBacklogId);
+                    pairs.push_back(p2);
+                }
+                const pair p1 = {
+                    tasks->create[i]->taskOwner.getValue(defaultId),
+                    tasks->create[i]->sprintBacklogId.getValue(defaultId)};
                 if (!checkPairExists(pairs, p1))
                 {
-                    m_sprintDatabase->checkMemberExist<EM, Bid>(item->taskOwner, item->sprintBacklogId);
+                    m_sprintDatabase->checkMemberExist<EM, Bid>(p1.p1, tasks->create[i]->sprintBacklogId);
                     pairs.push_back(p1);
                 }
 
-                // Check Current User + Backlog pair (Verify requester has access)
-                const pair p2 = {*userId, *item->sprintBacklogId};
-                if (!checkPairExists(pairs, p2))
-                {
-                    m_sprintDatabase->checkMemberExist<EM, Bid>(userId, item->sprintBacklogId);
-                    pairs.push_back(p2);
-                }
-
-                dbResult = m_sprintDatabase->createTask(item, transaction.getConnection());
+                dbResult = m_sprintDatabase->createTask(tasks->create[i], transaction.getConnection());
                 CHECK_SUCCESS;
             }
         }
@@ -100,22 +102,22 @@ void SprintService::bulkUpdateTasks(const Int32 &userId, const Object<UpdateTask
         {
             for (size_t i = 0; i < tasks->update->size(); i++)
             {
-                auto &item = tasks->update[i];
-                // Validate pairs for update (same logic as create)
-                const pair p1 = {*item->taskOwner, *item->sprintBacklogId};
-                if (!checkPairExists(pairs, p1))
-                {
-                    m_sprintDatabase->checkMemberExist<EM, Bid>(item->taskOwner, item->sprintBacklogId);
-                    pairs.push_back(p1);
-                }
-                const pair p2 = {*userId, *item->sprintBacklogId};
+                auto defaultId = 0;
+                const pair p2 = {*userId, tasks->update[i]->sprintBacklogId.getValue(defaultId)};
                 if (!checkPairExists(pairs, p2))
                 {
-                    m_sprintDatabase->checkMemberExist<EM, Bid>(userId, item->sprintBacklogId);
+                    pairs.push_back({0, p2.p2});
+                    m_sprintDatabase->checkMemberExist<EM, Bid>(userId, tasks->update[i]->sprintBacklogId);
                     pairs.push_back(p2);
                 }
+                const pair p1 = {tasks->update[i]->taskOwner.getValue(defaultId), tasks->update[i]->sprintBacklogId.getValue(0)};
+                if (!checkPairExists(pairs, p1))
+                {
+                    m_sprintDatabase->checkMemberExist<EM, Bid>(tasks->update[i]->taskOwner.getValue(defaultId), tasks->update[i]->sprintBacklogId.getValue(defaultId));
+                    pairs.push_back(p1);
+                }
 
-                dbResult = m_sprintDatabase->updateTask(item, transaction.getConnection());
+                dbResult = m_sprintDatabase->updateTask(tasks->update[i], transaction.getConnection());
                 CHECK_SUCCESS;
             }
         }
@@ -124,16 +126,16 @@ void SprintService::bulkUpdateTasks(const Int32 &userId, const Object<UpdateTask
         {
             for (size_t i = 0; i < tasks->deleted->size(); i++)
             {
-                auto &item = tasks->deleted[i];
+                int defaultId = 0;
                 // For delete, we usually just need to verify the requester has access to the backlog
-                pair p = {*userId, *item->sprintBacklogId};
+                pair p = {*userId, tasks->deleted[i]->sprintBacklogId.getValue(defaultId)};
                 if (!checkPairExists(pairs, p))
                 {
-                    m_sprintDatabase->checkMemberExist<EM, Bid>(userId, item->sprintBacklogId);
+                    m_sprintDatabase->checkMemberExist<EM, Bid>(userId, tasks->deleted[i]->sprintBacklogId);
                     pairs.push_back(p);
                 }
 
-                dbResult = m_sprintDatabase->deleteTask(item, transaction.getConnection());
+                dbResult = m_sprintDatabase->deleteTask(tasks->deleted[i], transaction.getConnection());
                 CHECK_SUCCESS;
             }
         }
