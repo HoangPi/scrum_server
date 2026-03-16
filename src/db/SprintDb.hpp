@@ -148,7 +148,7 @@ public:
             PARAM(Object<TaskDto>, dto));
 
       QUERY(getTaskBySprintBacklogId,
-            "SELECT * FROM get_task_by_sprint_backlog_id(:id)",
+            "SELECT * FROM get_task_by_sprint_backlog_id(:id) ORDER BY id ASC",
             PREPARE(true),
             PARAM(Int32, id));
 };
