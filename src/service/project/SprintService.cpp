@@ -145,3 +145,11 @@ void SprintService::bulkUpdateTasks(const Int32 &userId, const Object<UpdateTask
         throw;
     }
 }
+
+Vector<Object<TaskDto>> SprintService::getTasksBySprintBacklogId(const Int32 &userId, const Int32 &sprintBacklogId)
+{
+    m_sprintDatabase->checkMemberExist<EM, Bid>(userId, sprintBacklogId);
+    auto dbResult = m_sprintDatabase->getTaskBySprintBacklogId(sprintBacklogId);
+    CHECK_SUCCESS;
+    return dbResult->fetch<Vector<Object<TaskDto>>>();
+}

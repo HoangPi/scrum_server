@@ -146,6 +146,11 @@ public:
             "WHERE id = :dto.id AND sprint_backlog_id = :dto.sprint_backlog_id;",
             PREPARE(true),
             PARAM(Object<TaskDto>, dto));
+
+      QUERY(getTaskBySprintBacklogId,
+            "SELECT * FROM get_task_by_sprint_backlog_id(:id)",
+            PREPARE(true),
+            PARAM(Int32, id));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

@@ -157,9 +157,25 @@ public:
              BODY_DTO(Object<UpdateTasksDto>, dto),
              REQUEST(std::shared_ptr<IncomingRequest>, request))
     {
-        dto;
         m_sprintService.bulkUpdateTasks(int(request->getBundleData<Int64>("userId")), dto);
         return createResponse(Status::CODE_200, nullptr);
+    }
+
+    ENDPOINT_INFO(getTasks)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("GET", "sprints/tasks", getTasks,
+             QUERY(Int32, sprintBacklogId),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        return createDtoResponse(Status::CODE_200, m_sprintService.getTasksBySprintBacklogId(int(request->getBundleData<Int64>("userId")), sprintBacklogId));
     }
 };
 

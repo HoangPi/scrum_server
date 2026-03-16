@@ -87,6 +87,8 @@ class TaskDto : public oatpp::DTO
     DTO_FIELD(Int32, storyPoint, "story_point") = 0;
     DTO_FIELD(Boolean, finished, "finished") = false;
     DTO_FIELD(String, name, "name") = "";
+    DTO_FIELD(String, ownerName, "owner_name") = "";
+    DTO_FIELD(String, ownerEmail, "owner_email") = "";
 };
 
 class UpdateTasksDto : public oatpp::DTO

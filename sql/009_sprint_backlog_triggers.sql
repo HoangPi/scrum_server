@@ -123,3 +123,23 @@ AFTER DELETE ON Task
 FOR EACH ROW
 WHEN (OLD.finished)
 EXECUTE FUNCTION auto_remove_point();
+
+create or replace function get_task_by_sprint_backlog_id(p_id int4)
+returns table (
+	id int,
+	user_id int,
+	sprint_backlog_id int,
+	story_point int,
+	finished boolean,
+	name text,
+	owner_name text,
+	owner_email text
+) as $$
+begin
+return query
+SELECT t.id, t.user_id, t.sprint_backlog_id, t.story_point, t.finished, t.name, u.name AS owner_name, u.email AS owner_email 
+            FROM Task t 
+            LEFT JOIN AppUser u ON u.id = t.user_id 
+            WHERE t.sprint_backlog_id = p_id;
+end;
+$$ language plpgsql;

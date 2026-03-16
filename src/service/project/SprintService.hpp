@@ -50,4 +50,5 @@ public:
     void deleteSprintBacklog(const Int32 &userId, const Int32 &sprintId, const Int32 &sprintBacklogId);
     void updateSprintBacklog(const Int32 &userId, const Object<UpdateSprintBacklogDto> &sprintBacklog);
     void bulkUpdateTasks(const Int32 &userId, const Object<UpdateTasksDto> &tasks);
+    Vector<Object<TaskDto>> getTasksBySprintBacklogId(const Int32 &userId, const Int32 &sprintBacklogId);
 };
