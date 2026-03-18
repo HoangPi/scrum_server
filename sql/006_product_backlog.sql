@@ -7,7 +7,7 @@ CREATE TABLE ProductBacklog (
     name TEXT NOT NULL,
     acceptance_criteria TEXT NOT NULL DEFAULT '',
     priority INT NOT NULL CHECK (priority >= 0) DEFAULT 0,
-    status progress_type NOT NULL CHECK (status NOT IN ('on_going'::progress_type, 'failed'::progress_type, 'in_review'::progress_type)) DEFAULT 'created'::progress_type,
+    status progress_type NOT NULL CHECK (status NOT IN ('failed'::progress_type, 'in_review'::progress_type)) DEFAULT 'created'::progress_type,
     story_point INT NOT NULL CHECK (story_point >= 0) DEFAULT 0,
 
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -8,8 +8,13 @@ DECLARE
     l_task_owner INT;
     l_status progress_type;
     l_estimated_story_point INT;
+    l_backlog_id INT;
 BEGIN
-    SELECT story_point INTO l_estimated_story_point FROM ProductBacklog WHERE id = p_product_backlog_id;
+    SELECT status INTO l_status FROM Sprint WHERE id = p_sprint_id;
+    IF l_status = 'finished'::progress_type THEN
+        RAISE EXCEPTION 'Cannot create sprint backlog for finished Sprint';
+    END IF;
+    SELECT story_point, id INTO l_estimated_story_point, l_backlog_id FROM ProductBacklog WHERE id = p_product_backlog_id;
     IF EXISTS (
         SELECT sb.id FROM SprintBacklog sb
         WHERE sb.backlog_item_id = p_product_backlog_id AND sb.status <> 'failed'::progress_type
@@ -35,6 +40,7 @@ BEGIN
     INSERT INTO SprintBacklog 
         (sprint_id, backlog_item_id, task_owner, status, notes, estimated_story_point)
     VALUES (p_sprint_id, p_product_backlog_id, l_task_owner, l_status, p_note, l_estimated_story_point);
+    UPDATE ProductBacklog SET status = 'on_going'::progress_type WHERE id = p_product_backlog_id;
 END;
 $$ LANGUAGE plpgsql;
 
