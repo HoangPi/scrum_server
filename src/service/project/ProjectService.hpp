@@ -25,6 +25,7 @@ private:
     OATPP_COMPONENT(std::shared_ptr<UserDb>, m_userDatabase);       // Inject database component
     OATPP_COMPONENT(std::shared_ptr<ProjectDb>, m_projectDatabase); // Inject database component
     OATPP_COMPONENT(std::shared_ptr<SprintDb>, m_sprintDatabase);
+
 public:
     void createProject(const oatpp::Object<ProjectDto> &project);
     Vector<Object<ProjectDto>> getProjects(const Int32 &userId);
@@ -33,5 +34,10 @@ public:
     void updateInvite(const Int32 &userId, const Int32 &inviteId, const Boolean &accept);
     void createProductBacklog(const Int32 &userId, const Object<ProductBacklogDto> &backlog);
     Vector<Object<ProductBacklogDto>> getProductBacklogs(const Int32 &userId, const Int32 &projectId, const Int32 &offset, const Boolean &includeFinished);
+    Vector<Object<ProductBacklogDto>> getProductBacklogsWithQuery(const Int32 &userId,
+                                                                  const Int32 &projectId,
+                                                                  const Int32 &offset, const String &nameFilter,
+                                                                  const Boolean &finished, const Boolean &storyPointAsc,
+                                                                  const Boolean &priorityAsc);
     Vector<Object<MemberInfo>> getMemberByEmailAndProjectId(const Int32 &userId, const String &email, const Int32 &projectId);
 };

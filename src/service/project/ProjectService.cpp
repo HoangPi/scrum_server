@@ -96,6 +96,17 @@ Vector<Object<ProductBacklogDto>> ProjectService::getProductBacklogs(const Int32
     return dbResult->fetch<Vector<Object<ProductBacklogDto>>>();
 }
 
+Vector<Object<ProductBacklogDto>> ProjectService::getProductBacklogsWithQuery(const Int32 &userId, const Int32 &projectId, const Int32 &offset, const String &nameFilter, const Boolean &finished, const Boolean &storyPointAsc, const Boolean &priorityAsc)
+{
+    auto dbResult = m_projectDatabase->getMember(userId, projectId);
+    CHECK_SUCCESS;
+    auto members = dbResult->fetch<Vector<Object<MemberDto>>>();
+    OATPP_ASSERT_HTTP(members->size() == 1, Status::CODE_400, "User does not belong to the project");
+    dbResult = m_projectDatabase->getProductBacklogsWithQuery(projectId, offset, nameFilter, finished, storyPointAsc, priorityAsc);
+    CHECK_SUCCESS;
+    return dbResult->fetch<Vector<Object<ProductBacklogDto>>>();
+}
+
 Vector<Object<MemberInfo>> ProjectService::getMemberByEmailAndProjectId(const Int32 &userId, const String &email, const Int32 &projectId)
 {
     m_sprintDatabase->checkMemberExist<EM, Pid>(userId, projectId);

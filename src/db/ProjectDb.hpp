@@ -78,6 +78,15 @@ public:
             PARAM(oatpp::Int32, projectId),
             PARAM(oatpp::Int32, offset),
             PARAM(oatpp::Boolean, includeFinished));
+      QUERY(getProductBacklogsWithQuery,
+            "SELECT * FROM get_product_backlog_with_query(:projectId, :offset, :nameFilter, :finished, :storyPoint, :priority)",
+            PREPARE(true),
+            PARAM(oatpp::Int32, projectId),
+            PARAM(oatpp::Int32, offset),
+            PARAM(oatpp::String, nameFilter),
+            PARAM(oatpp::Boolean, finished),
+            PARAM(oatpp::Boolean, storyPoint),
+            PARAM(oatpp::Boolean, priority));
 
       QUERY(getUserByProjectIdAndEmail,
             "SELECT u.id, name, email FROM Member m "

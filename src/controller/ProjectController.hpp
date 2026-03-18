@@ -3,6 +3,7 @@
 #include "service/UserService.hpp"
 #include "service/project/ProjectService.hpp"
 
+#include "oatpp/encoding/Url.hpp"
 #include "oatpp/web/server/api/ApiController.hpp"
 #include "oatpp/web/mime/ContentMappers.hpp"
 #include "oatpp/macro/codegen.hpp"
@@ -173,6 +174,55 @@ public:
                 projectId,
                 std::atoi(queryParams.get("offset").get() ? queryParams.get("offset")->c_str() : "0"),
                 i));
+    }
+    ENDPOINT_INFO(getProductBacklogsWithQuery)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("GET", "project/backlog/query", getProductBacklogsWithQuery,
+             QUERY(Int32, projectId),
+             QUERIES(QueryParams, queryParams),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        const std::string defaultString = "";
+        oatpp::Int32 offset = 0;
+        oatpp::String nameFilter = nullptr;
+        oatpp::Boolean includeFinished = nullptr;
+        oatpp::Boolean ascStoryPoint = nullptr;
+        oatpp::Boolean ascPriority = nullptr;
+        if (const auto key = queryParams.get("offset"))
+        {
+            offset = std::atoi(key.getValue(defaultString).c_str());
+        }
+        if (const auto key = queryParams.get("name"))
+        {
+            nameFilter = oatpp::encoding::Url::decode(key);
+        }
+        if (queryParams.get("finished"))
+        {
+            includeFinished = queryParams.get("finished").equalsCI_ASCII("true") ? true : false;
+        }
+        if (queryParams.get("storyPoint"))
+        {
+            ascStoryPoint = queryParams.get("storyPoint").equalsCI_ASCII("true") ? true : false;
+        }
+        if (queryParams.get("priority"))
+        {
+
+            ascPriority = queryParams.get("priority").equalsCI_ASCII("true") ? true : false;
+        }
+
+        return createDtoResponse(
+            Status::CODE_200,
+            m_projectService.getProductBacklogsWithQuery(
+                int(request->getBundleData<Int64>("userId")),
+                projectId, offset, nameFilter, includeFinished, ascStoryPoint, ascPriority));
     }
 
     ENDPOINT_INFO(getMemberByEmail)
