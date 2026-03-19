@@ -27,8 +27,9 @@ add_library(crud-lib
         src/auth/JWT.cpp
         src/auth/AuthHandler.cpp
         src/interceptor/AuthInterceptor.cpp
-        ../Bcrypt.cpp/src/bcrypt.cpp
-        ../Bcrypt.cpp/src/blowfish.cpp)
+        Bcrypt.cpp/src/bcrypt.cpp
+        Bcrypt.cpp/src/blowfish.cpp
+)
 
 ## include directories
 
@@ -80,7 +81,7 @@ add_definitions(
         -DDATABASE_MIGRATIONS="${CMAKE_CURRENT_SOURCE_DIR}/sql"
 )
 
-target_include_directories(crud-lib PRIVATE ../Bcrypt.cpp/include)
+target_include_directories(crud-lib PRIVATE Bcrypt.cpp/include)
 
 if(CMAKE_SYSTEM_NAME MATCHES Linux)
     find_package(Threads REQUIRED)
