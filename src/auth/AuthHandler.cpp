@@ -7,8 +7,15 @@ AuthHandler::AuthHandler(const std::shared_ptr<JWT> &jwt)
 
 std::shared_ptr<AuthHandler::AuthorizationObject> AuthHandler::authorize(const oatpp::String &token)
 {
-  auto t = token->substr(7); // remove the "bearer"
-  return m_jwt->readAndVerifyToken(t);
+  try
+  {
+    auto t = token->substr(7); // remove the "bearer"
+    return m_jwt->readAndVerifyToken(t);
+  }
+  catch (...)
+  {
+    OATPP_ASSERT_HTTP(false, oatpp::web::protocol::http::Status::CODE_401, "Token has expired");
+  }
 }
 
 std::shared_ptr<oatpp::web::server::handler::AuthorizationObject> AuthHandler::handleAuthorization(const oatpp::String &header)
