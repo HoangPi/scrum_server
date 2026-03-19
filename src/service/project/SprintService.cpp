@@ -52,7 +52,6 @@ void SprintService::updateSprintBacklog(const Int32 &userId, const Object<Update
     if (sprintBacklog->taskOwner)
     {
         m_sprintDatabase->checkMemberExist<EM, Bid>(sprintBacklog->taskOwner, sprintBacklog->id);
-        m_sprintDatabase->checkMemberExist<POSM, Bid>(userId, sprintBacklog->id);
     }
     else
     {

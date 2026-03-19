@@ -95,6 +95,12 @@ public:
             PREPARE(false),
             PARAM(oatpp::Int32, projectId),
             PARAM(oatpp::String, likeEmail));
+      
+      QUERY(updateProductBacklog,
+            "UPDATE ProductBacklog SET name = :backlog.name, acceptance_criteria = :backlog.acceptance_criteria, "
+            "priority = :backlog.priority, story_point = :backlog.story_point WHERE id = :backlog.id",
+            PREPARE(true),
+            PARAM(oatpp::Object<ProductBacklogDto>, backlog));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

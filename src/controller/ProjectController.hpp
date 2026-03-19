@@ -244,6 +244,45 @@ public:
             Status::CODE_200,
             m_projectService.getMemberByEmailAndProjectId(int(request->getBundleData<Int64>("userId")), email, projectId));
     }
+
+    ENDPOINT_INFO(getBacklogCount)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("GET", "backlog/count", getBacklogCount,
+             QUERY(Int32, projectId),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        return createDtoResponse(
+            Status::CODE_200,
+            m_projectService.getBacklogCount(int(request->getBundleData<Int64>("userId")), projectId));
+    }
+
+    ENDPOINT_INFO(updateProductBacklog)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("PUT", "backlog", updateProductBacklog,
+             BODY_DTO(Object<ProductBacklogDto>, backlog),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        m_projectService.updateProductBacklog(int(request->getBundleData<Int64>("userId")), backlog);
+        return createResponse(
+            Status::CODE_200,
+            nullptr);
+    }
 };
 
 #include OATPP_CODEGEN_END(ApiController) //<- End Codegen

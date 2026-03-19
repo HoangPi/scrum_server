@@ -1,14 +1,13 @@
-CREATE OR REPLACE FUNCTION create_sprint (
-    p_project_id INT,
-    p_name TEXT,
-    p_goal TEXT,
-    p_start_date TEXT)
-RETURNS Sprint AS $$
+CREATE OR REPLACE FUNCTION public.create_sprint(p_project_id integer, p_name text, p_goal text, p_start_date text)
+ RETURNS sprint
+ LANGUAGE plpgsql
+AS $function$
 DECLARE
     l_sprint_length INT;
     l_status progress_type;
     l_end_date DATE;
     l_new_sprint Sprint;
+	l_start_date DATE;
 BEGIN
     SELECT sprint_length INTO l_sprint_length 
     FROM Project 
@@ -17,9 +16,14 @@ BEGIN
     IF NOT FOUND THEN
         RAISE EXCEPTION 'Project with ID % not found', p_project_id;
     END IF;
-
-    l_end_date := p_start_date::DATE + (l_sprint_length * 7 * INTERVAL '1 day') - (INTERVAL '1 day');
-    IF p_start_date::DATE < CURRENT_DATE AND CURRENT_DATE < l_end_date THEN
+	IF p_start_date = '' THEN
+		SELECT MAX(end_date) INTO l_start_date FROM Sprint WHERE project_id = p_project_id GROUP BY project_id;
+		l_start_date := l_start_date + INTERVAL '1 day';
+	ELSE	
+		l_start_date := p_start_date::DATE;
+	END IF;
+    l_end_date := l_start_date::DATE + (l_sprint_length * 7 * INTERVAL '1 day') - (INTERVAL '1 day');
+    IF l_start_date < CURRENT_DATE AND CURRENT_DATE < l_end_date THEN
         l_status = 'on_going'::progress_type;
     ELSE
         l_status = 'created'::progress_type;
@@ -27,11 +31,12 @@ BEGIN
 
     INSERT INTO Sprint (project_id, name, goal, start_date, end_date, status)
     VALUES (p_project_id, p_name, p_goal, 
-        p_start_date::DATE, l_end_date, l_status)
+        l_start_date, l_end_date, l_status)
     RETURNING * INTO l_new_sprint;
     RETURN l_new_sprint;
 END;
-$$ LANGUAGE plpgsql;
+$function$
+;
 
 CREATE OR REPLACE FUNCTION get_sprints_in_between_dates(p_project_id INT, p_start TEXT, p_end TEXT)
 RETURNS TABLE (

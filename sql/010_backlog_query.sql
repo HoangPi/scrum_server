@@ -52,3 +52,25 @@ BEGIN
 	RETURN QUERY EXECUTE l_sql;
 END;
 $function$
+
+CREATE OR REPLACE FUNCTION handle_product_backlog_modify()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+	IF OLD.Status IS DISTINCT FROM NEW.Status AND OLD.Status <> 'finished'::progress_type THEN
+		OLD.Status := NEW.status;
+		RETURN OLD;
+	END IF;
+	IF OLD.status <> 'created'::progress_type THEN
+		RAISE EXCEPTION 'Active or completed product backlog cannot be modified';
+	END IF;
+	RETURN NEW;
+END
+$function$
+;
+
+CREATE TRIGGER trg_prevent_active_backlog_modification
+BEFORE UPDATE ON ProductBacklog
+FOR EACH ROW
+EXECUTE FUNCTION handle_product_backlog_modify();

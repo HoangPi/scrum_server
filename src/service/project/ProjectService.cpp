@@ -115,3 +115,21 @@ Vector<Object<MemberInfo>> ProjectService::getMemberByEmailAndProjectId(const In
     CHECK_SUCCESS;
     return dbResult->fetch<Vector<Object<MemberInfo>>>();
 }
+
+Int32 ProjectService::getBacklogCount(const Int32 &userId, const Int32 &projectId)
+{
+    m_sprintDatabase->checkMemberExist<EM, Pid>(userId, projectId);
+    auto dbResult = m_projectDatabase->executeQuery("SELECT COUNT(project_id) AS id FROM ProductBacklog WHERE project_id = :projectId GROUP BY project_id", {{"projectId", projectId}});
+    CHECK_SUCCESS;
+    auto ids = dbResult->fetch<Vector<Object<IdDto>>>();
+    OATPP_ASSERT_HTTP(ids->size() == 1, Status::CODE_404, "Project not found");
+    return ids[0]->id;
+}
+
+void ProjectService::updateProductBacklog(const Int32 &userId, const Object<ProductBacklogDto> &backlog)
+{
+    m_sprintDatabase->checkMemberExist<POSM, Pid>(userId, backlog->projectId);
+    auto dbResult = m_projectDatabase->updateProductBacklog(backlog);
+    CHECK_SUCCESS;
+    return;
+}
