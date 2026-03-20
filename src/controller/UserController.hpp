@@ -164,6 +164,27 @@ public:
         Status::CODE_200,
         m_userService.getNotifications(int(request->getBundleData<oatpp::Int64>("userId")), offset));
   }
+
+  ENDPOINT_INFO(handleReadNotification)
+  {
+    info->summary = "Get one User by userId";
+
+    info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+    info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+    info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+
+    info->pathParams["userId"].description = "User Identifier";
+  }
+  ENDPOINT("POST", "notifications", handleReadNotification,
+           QUERY(oatpp::Int32, id),
+           QUERY(oatpp::Boolean, willDelete),
+           REQUEST(std::shared_ptr<IncomingRequest>, request))
+  {
+    m_userService.handleReadNotification(int(request->getBundleData<oatpp::Int64>("userId")), id, willDelete);
+    return createResponse(
+        Status::CODE_200,
+        nullptr);
+  }
 };
 
 #include OATPP_CODEGEN_END(ApiController) //<- End Codegen

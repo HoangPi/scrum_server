@@ -81,3 +81,28 @@ oatpp::Vector<oatpp::Object<NotificationDto>> UserService::getNotifications(cons
     OATPP_ASSERT_HTTP(dbResult->isSuccess(), Status::CODE_500, dbResult->getErrorMessage());
     return dbResult->fetch<oatpp::Vector<oatpp::Object<NotificationDto>>>();
 }
+
+void UserService::handleReadNotification(const oatpp::Int32 &userId, const oatpp::Int32 &notificationId, const oatpp::Boolean &willDelete)
+{
+    bool defaultWillDelete = false;
+    int defaultId = -1;
+    if (notificationId.getValue(defaultId) != -1)
+    {
+        if (willDelete.getValue(defaultWillDelete))
+        {
+            m_database->executeQuery("DELETE FROM notification WHERE id = :nid AND owner = :owner", {{"nid", notificationId},
+                                                                                                     {"owner", userId}});
+            return;
+        }
+        m_database->executeQuery("UPDATE notification SET has_read = true WHERE id = :nid AND owner = :owner", {{"nid", notificationId},
+                                                                                                                {"owner", userId}});
+        return;
+    }
+    if (willDelete.getValue(defaultWillDelete))
+    {
+        m_database->executeQuery("DELETE FROM notification WHERE has_read = true AND owner = :owner", {{"owner", userId}});
+        return;
+    }
+    m_database->executeQuery("UPDATE notification SET has_read = true WHERE owner = :owner", {{"owner", userId}});
+    return;
+}
