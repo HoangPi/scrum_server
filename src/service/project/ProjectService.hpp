@@ -42,4 +42,5 @@ public:
     Vector<Object<MemberInfo>> getMemberByEmailAndProjectId(const Int32 &userId, const String &email, const Int32 &projectId);
     Int32 getBacklogCount(const Int32 &userId, const Int32 &projectId);
     void updateProductBacklog(const Int32 &userId, const Object<ProductBacklogDto> &backlog);
+    void deleteProjectById(const Int32 &userId, const Int32 &projectId);
 };

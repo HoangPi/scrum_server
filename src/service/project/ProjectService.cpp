@@ -133,3 +133,14 @@ void ProjectService::updateProductBacklog(const Int32 &userId, const Object<Prod
     CHECK_SUCCESS;
     return;
 }
+
+void ProjectService::deleteProjectById(const Int32 &userId, const Int32 &projectId)
+{
+    m_sprintDatabase->checkMemberExist<PO, Pid>(userId, projectId);
+    auto dbResult = m_projectDatabase->executeQuery(
+        "DELETE FROM Project WHERE id = :project_id "
+        "AND project_owner = :owner",
+        {{"owner", userId},
+         {"project_id", projectId}});
+    CHECK_SUCCESS;
+}
