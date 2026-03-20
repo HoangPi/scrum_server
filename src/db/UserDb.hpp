@@ -68,7 +68,18 @@ public:
             "ORDER BY has_read ASC, created_at DESC "
             " LIMIT 20 OFFSET 20 * :offset;",
             PARAM(oatpp::Int32, userId),
-            PARAM(oatpp::Int32, offset))
+            PARAM(oatpp::Int32, offset));
+
+      QUERY(updateUserInfo,
+            "UPDATE AppUser SET name = :dto.name, email = :dto.email WHERE id = :dto.id",
+            PREPARE(true),
+            PARAM(oatpp::Object<UserDto>, dto));
+
+      QUERY(updateUserPassword,
+            "UPDATE AppUser SET password = :password WHERE id = :userId",
+            PREPARE(true),
+            PARAM(oatpp::Int64, userId),
+            PARAM(oatpp::String, password));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

@@ -42,9 +42,20 @@ oatpp::Object<UserDto> UserService::getUserByUsername(const oatpp::String &usern
     return users[0];
 }
 
-oatpp::Object<UserDto> UserService::updateUser(const oatpp::Object<UserDto> &dto)
+void UserService::updateUser(const oatpp::Object<UserDto> &dto)
 {
-    return oatpp::Object<UserDto>();
+    m_database->updateUserInfo(dto);
+    return;
+}
+
+void UserService::changePassword(const oatpp::Int64 &userId, const oatpp::String &oldPassword, const oatpp::String &newPassword)
+{
+    // TODO Maybe have another db query to handle this
+    auto user = getUserById(userId);
+    auto userWithPassword = getUserByUsername(user->userName);
+    OATPP_ASSERT_HTTP(bcrypt::validatePassword(oldPassword, userWithPassword->password), Status::CODE_401, "Old password is incorrect");
+    const auto hashedPassword = bcrypt::generateHash(newPassword);
+    m_database->updateUserPassword(userId, hashedPassword);
 }
 
 oatpp::Object<ReturnUserDto> UserService::getUserById(const oatpp::Int64 &id, const oatpp::provider::ResourceHandle<oatpp::orm::Connection> &connection)

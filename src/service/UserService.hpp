@@ -22,7 +22,8 @@ public:
     oatpp::Object<ReturnUserDto> createUser(const oatpp::Object<UserDto> &dto);
     oatpp::Object<AuthDto> verifyUser(const oatpp::Object<LoginUserDto> &dto);
     oatpp::Object<UserDto> getUserByUsername(const oatpp::String &username);
-    oatpp::Object<UserDto> updateUser(const oatpp::Object<UserDto> &dto);
+    void updateUser(const oatpp::Object<UserDto> &dto);
+    void changePassword(const oatpp::Int64 &userId, const oatpp::String &oldPassword, const oatpp::String &newPassword);
     oatpp::Object<ReturnUserDto> getUserById(const oatpp::Int64 &id, const oatpp::provider::ResourceHandle<oatpp::orm::Connection> &connection = nullptr);
     oatpp::Object<PageDto<oatpp::Object<UserDto>>> getAllUsers(const oatpp::UInt32 &offset, const oatpp::UInt32 &limit);
     oatpp::Object<StatusDto> deleteUserById(const oatpp::Int32 &id);

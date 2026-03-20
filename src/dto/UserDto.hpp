@@ -57,6 +57,15 @@ class NotificationDto : public oatpp::DTO
   DTO_FIELD(Boolean, isRead, "has_read");
 };
 
+class ChangePasswordDto : public oatpp::DTO
+{
+  DTO_INIT(ChangePasswordDto, DTO)
+
+  DTO_FIELD(Int32, id, "id");
+  DTO_FIELD(String, oldPassword, "oldPassword");
+  DTO_FIELD(String, newPassword, "newPassword");
+};
+
 #include OATPP_CODEGEN_END(DTO)
 
 #endif /* UserDto_hpp */

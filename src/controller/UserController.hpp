@@ -59,12 +59,33 @@ public:
 
     info->pathParams["userId"].description = "User Identifier";
   }
-  ENDPOINT("PUT", "users/{userId}", putUser,
-           PATH(Int32, userId),
-           BODY_DTO(Object<UserDto>, userDto))
+  ENDPOINT("PUT", "users", putUser,
+           BODY_DTO(Object<UserDto>, userDto),
+           REQUEST(std::shared_ptr<IncomingRequest>, request))
   {
-    userDto->id = userId;
-    return createDtoResponse(Status::CODE_200, m_userService.updateUser(userDto));
+    userDto->id = int(request->getBundleData<Int64>("userId"));
+    m_userService.updateUser(userDto);
+    return createResponse(Status::CODE_200, nullptr);
+  }
+
+  ENDPOINT_INFO(changePassword)
+  {
+    info->summary = "Update User by userId";
+
+    info->addConsumes<Object<UserDto>>("application/json");
+
+    info->addResponse<Object<UserDto>>(Status::CODE_200, "application/json");
+    info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+    info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+
+    info->pathParams["userId"].description = "User Identifier";
+  }
+  ENDPOINT("PUT", "users/change_password", changePassword,
+           BODY_DTO(Object<ChangePasswordDto>, dto),
+           REQUEST(std::shared_ptr<IncomingRequest>, request))
+  {
+    m_userService.changePassword(request->getBundleData<Int64>("userId"), dto->oldPassword, dto->newPassword);
+    return createResponse(Status::CODE_200, nullptr);
   }
 
   ENDPOINT_INFO(getUserById)
