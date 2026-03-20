@@ -109,6 +109,25 @@ public:
         return createResponse(Status::CODE_200, nullptr);
     }
 
+    ENDPOINT_INFO(createManyInvites)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("POST", "invite/projects/many", createManyInvites,
+             BODY_DTO(Object<InviteManyDto>, invite),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        m_projectService.createManyInvites(invite, int(request->getBundleData<Int64>("userId")));
+
+        return createResponse(Status::CODE_200, nullptr);
+    }
+
     ENDPOINT_INFO(updateInvite)
     {
         info->summary = "Create new User";

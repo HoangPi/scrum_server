@@ -67,6 +67,36 @@ void ProjectService::createInvite(const Object<InviteDto> &invite, const Int32 &
     CHECK_SUCCESS;
 }
 
+void ProjectService::createManyInvites(const Object<InviteManyDto> &invite, const Int32 &userId)
+{
+    auto transaction = m_projectDatabase->beginTransaction();
+    auto singleInvite = Object<InviteDto>::createShared();
+    singleInvite->projectId = invite->projectId;
+    std::shared_ptr<oatpp::orm::QueryResult> dbResult;
+    try
+    {
+        m_sprintDatabase->checkMemberExist<POSM, Pid>(userId, invite->projectId);
+        for (size_t i = 0; i < invite->invitees->size(); i++)
+        {
+            singleInvite->invitee = invite->invitees[i];
+            dbResult = m_projectDatabase->getMember(singleInvite->invitee, singleInvite->projectId, transaction.getConnection());
+            CHECK_SUCCESS;
+            auto members = dbResult->fetch<Vector<Object<MemberDto>>>();
+            OATPP_ASSERT_HTTP(members->size() == 0, Status::CODE_400, "User has been a member of project already")
+            dbResult = m_projectDatabase->deleteInvite(singleInvite, transaction.getConnection());
+            CHECK_SUCCESS;
+            dbResult = m_projectDatabase->createInvite(singleInvite, transaction.getConnection());
+            CHECK_SUCCESS;
+        }
+    }
+    catch (...)
+    {
+        transaction.rollback();
+        throw;
+    }
+    transaction.commit();
+}
+
 void ProjectService::updateInvite(const Int32 &userId, const Int32 &inviteId, const Boolean &accept)
 {
     auto dbResult = m_projectDatabase->updateInvite(userId, inviteId, accept);

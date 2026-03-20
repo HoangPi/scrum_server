@@ -35,6 +35,14 @@ class InviteDto : public oatpp::DTO
     DTO_FIELD(String, status, "status") = "created";
 };
 
+class InviteManyDto : public oatpp::DTO
+{
+    DTO_INIT(InviteManyDto, DTO)
+
+    DTO_FIELD(Int32, projectId, "project_id");
+    DTO_FIELD(Vector<Int32>, invitees, "invitees");
+};
+
 class MemberInfo : public oatpp::DTO
 {
     DTO_INIT(MemberInfo, DTO)
