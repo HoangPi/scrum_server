@@ -80,6 +80,11 @@ public:
             PREPARE(true),
             PARAM(oatpp::Int64, userId),
             PARAM(oatpp::String, password));
+
+      QUERY(getUserLikeEmail,
+            "SELECT id, name, email FROM AppUser WHERE email LIKE :email ORDER BY id ASC LIMIT 5;",
+            PREPARE(true),
+            PARAM(oatpp::String, email));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

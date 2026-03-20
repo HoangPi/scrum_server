@@ -6,6 +6,7 @@
 #include "db/UserDb.hpp"
 #include "dto/PageDto.hpp"
 #include "dto/StatusDto.hpp"
+#include "dto/ProjectDto.hpp"
 
 #include "oatpp/web/protocol/http/Http.hpp"
 #include "oatpp/macro/component.hpp"
@@ -29,4 +30,5 @@ public:
     oatpp::Object<StatusDto> deleteUserById(const oatpp::Int32 &id);
     oatpp::Vector<oatpp::Object<NotificationDto>> getNotifications(const oatpp::Int32 &userId, const oatpp::Int32 &offset);
     void handleReadNotification(const oatpp::Int32 &userId, const oatpp::Int32 &notificationId, const oatpp::Boolean &willDelete);
+    oatpp::Vector<oatpp::Object<MemberInfo>> getUsersByEmail(const oatpp::String &email);
 };
