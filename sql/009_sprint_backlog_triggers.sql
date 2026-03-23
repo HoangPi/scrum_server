@@ -70,7 +70,7 @@ BEGIN
         notes = l_notes, status = l_status
     WHERE SprintBacklog.id = l_OLD.id;
 END 
-$function$
+$function$;
 
 ALTER TABLE Task ADD COLUMN finished BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE Task ADD COLUMN name TEXT DEFAULT NULL;

@@ -51,7 +51,7 @@ BEGIN
 	l_sql := l_sql || ' LIMIT 20 OFFSET (' || p_offset || ' * 20);';
 	RETURN QUERY EXECUTE l_sql;
 END;
-$function$
+$function$;
 
 CREATE OR REPLACE FUNCTION handle_product_backlog_modify()
  RETURNS trigger
