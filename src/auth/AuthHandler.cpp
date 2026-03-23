@@ -9,6 +9,10 @@ std::shared_ptr<AuthHandler::AuthorizationObject> AuthHandler::authorize(const o
 {
   try
   {
+    if (!token)
+    {
+      throw oatpp::web::protocol::http::HttpError(oatpp::web::protocol::http::Status::CODE_401, "Token has expired");
+    }
     auto t = token->substr(7); // remove the "bearer"
     return m_jwt->readAndVerifyToken(t);
   }
