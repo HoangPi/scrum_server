@@ -39,14 +39,14 @@ target_include_directories(crud-lib PUBLIC /usr/local/include)
 
 ## link libs
 
-find_package(oatpp          1.4.0 REQUIRED)
-find_package(oatpp-swagger  1.4.0 REQUIRED)
+find_package(oatpp          CONFIG REQUIRED)
+find_package(oatpp-swagger  CONFIG REQUIRED)
 # find_package(oatpp-sqlite   1.4.0 REQUIRED)
-find_package(oatpp-postgresql   1.4.0 REQUIRED)
-find_package(oatpp-openssl 1.4.0 REQUIRED)
+find_package(oatpp-postgresql   CONFIG REQUIRED)
+find_package(oatpp-openssl CONFIG REQUIRED)
 find_package(jwt-cpp CONFIG REQUIRED)
 
-find_package(SQLite3 REQUIRED)
+# find_package(SQLite3 REQUIRED)
 
 target_link_libraries(crud-lib
         # Oat++

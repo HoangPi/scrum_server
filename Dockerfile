@@ -1,24 +1,65 @@
-FROM alpine:latest
+# Stage 1: Build
+FROM ubuntu:22.04 AS builder
 
-RUN apk update && apk upgrade
+# Install build tools and dependencies
+RUN apt-get update && apt-get install -y \
+    cmake \
+    g++ \
+    make \
+    git \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apk add g++
+WORKDIR /app
 
-RUN apk add git
-RUN apk add make
-RUN apk add cmake
+# Copy source code
+COPY . .
 
-ADD . /service
+# Run oatpp modules installer script before building
+RUN chmod +x utility/install-oatpp-modules.sh && \
+    bash ./utility/install-oatpp-modules.sh Release
 
-WORKDIR /service/utility
+# Install jwt-cpp from source
+ARG a=2
+RUN git clone https://github.com/Thalhammer/jwt-cpp.git /tmp/jwt-cpp && \
+    cd /tmp/jwt-cpp && \
+    mkdir build && cd build && \
+    cmake -DCMAKE_BUILD_TYPE=Release .. && \
+    make -j$(nproc) && \
+    make install
 
-RUN ./install-oatpp-modules.sh Release
+# Configure and build in Release mode
+RUN rm -rf build && mkdir build && cd build && \
+    cmake -DCMAKE_BUILD_TYPE=Release .. && \
+    make -j$(nproc)
 
-WORKDIR /service/build
+# Stage 2: Runtime
+FROM ubuntu:22.04
 
-RUN cmake ..
-RUN make
+# Install only runtime dependencies (adjust as needed)
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 8000 8000
+WORKDIR /app
 
-ENTRYPOINT ["./crud-exe"]
+# Copy built executable from builder stage
+COPY --from=builder /app/build/crud-exe .
+
+# Copy the swagger icon because it is vital to the project
+COPY --from=builder /usr/local/include/oatpp-1.4.0/bin/oatpp-swagger/res /usr/local/include/oatpp-1.4.0/bin/oatpp-swagger/res
+RUN mkdir /usr/local/include/oatpp-1.4.0/oatpp-swagger
+
+# Expose application port (adjust if your app uses a different one)
+EXPOSE 8000
+
+# Run the server
+COPY --from=builder /app/build/crud-exe .
+COPY .env .
+COPY entrypoint.sh .
+
+# Make entrypoint script executable
+RUN chmod +x entrypoint.sh
+
+# Use entrypoint script instead of CMD
+ENTRYPOINT ["./entrypoint.sh"]
