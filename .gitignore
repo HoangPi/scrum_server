@@ -44,9 +44,10 @@ cmake-build-debug/
 /.vs
 /.vscode
 
-.env.*
+.env*
 !.env.example
 
 /files
 records/
 migrate_env/
+__*__

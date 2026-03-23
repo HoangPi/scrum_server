@@ -1,0 +1,27 @@
+[
+  {
+    "username": "creator_alpha",
+    "email": "alicej@mail.com",
+    "name": "Alice Johnson"
+  },
+  {
+    "username": "user_beta",
+    "email": "bobs@mail.com",
+    "name": "Bob Smith"
+  },
+  {
+    "username": "uesr_alpha",
+    "email": "charlien@mail.com",
+    "name": "Charlie Nguyen"
+  },
+  {
+    "username": "manager_alpha",
+    "email": "dianalee@mail.com",
+    "name": "Diana Lee"
+  },
+  {
+    "username": "regular_alpha",
+    "email": "ethanb@mail.com",
+    "name": "Ethan Brown"
+  }
+]
