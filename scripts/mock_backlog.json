@@ -1,0 +1,142 @@
+[
+  {
+    "project_id": 1,
+    "name": "Audit login security",
+    "acceptance_criteria": "Ensure bcrypt hashing and HTTPS",
+    "priority": 1,
+    "story_point": 4
+  },
+  {
+    "project_id": 1,
+    "name": "Setup CI/CD pipeline",
+    "acceptance_criteria": "Automated testing and deployment to staging on merge",
+    "priority": 1,
+    "story_point": 8
+  },
+  {
+    "project_id": 1,
+    "name": "Design database schema",
+    "acceptance_criteria": "ERD finalized and approved by technical lead",
+    "priority": 2,
+    "story_point": 5
+  },
+  {
+    "project_id": 1,
+    "name": "Implement JWT authentication",
+    "acceptance_criteria": "Tokens generated on login and validated on protected routes",
+    "priority": 1,
+    "story_point": 5
+  },
+  {
+    "project_id": 1,
+    "name": "Create user profile page",
+    "acceptance_criteria": "Users can view and edit their name and email",
+    "priority": 3,
+    "story_point": 3
+  },
+  {
+    "project_id": 1,
+    "name": "Build password reset flow",
+    "acceptance_criteria": "Secure token sent via email with a 15-minute expiration",
+    "priority": 2,
+    "story_point": 5
+  },
+  {
+    "project_id": 1,
+    "name": "Implement email service",
+    "acceptance_criteria": "Integration with SMTP provider for transactional emails",
+    "priority": 2,
+    "story_point": 3
+  },
+  {
+    "project_id": 1,
+    "name": "Setup role-based access control",
+    "acceptance_criteria": "Middleware verifies user role against endpoint requirements",
+    "priority": 1,
+    "story_point": 8
+  },
+  {
+    "project_id": 1,
+    "name": "Create project dashboard",
+    "acceptance_criteria": "Displays list of active sprints and basic metrics",
+    "priority": 2,
+    "story_point": 5
+  },
+  {
+    "project_id": 1,
+    "name": "Build task creation modal",
+    "acceptance_criteria": "Form validates inputs and saves to the database",
+    "priority": 2,
+    "story_point": 3
+  },
+  {
+    "project_id": 1,
+    "name": "Implement task assignment",
+    "acceptance_criteria": "Users can be assigned to tasks from a dropdown list",
+    "priority": 3,
+    "story_point": 2
+  },
+  {
+    "project_id": 1,
+    "name": "Add drag-and-drop Kanban board",
+    "acceptance_criteria": "Task status updates automatically when moved across columns",
+    "priority": 3,
+    "story_point": 8
+  },
+  {
+    "project_id": 1,
+    "name": "Integrate third-party OAuth",
+    "acceptance_criteria": "Users can log in using their Google accounts",
+    "priority": 4,
+    "story_point": 5
+  },
+  {
+    "project_id": 1,
+    "name": "Write unit tests for auth module",
+    "acceptance_criteria": "Minimum 80% code coverage on all authentication functions",
+    "priority": 2,
+    "story_point": 3
+  },
+  {
+    "project_id": 1,
+    "name": "Setup logging and monitoring",
+    "acceptance_criteria": "Error logs are captured and sent to the centralized logging service",
+    "priority": 3,
+    "story_point": 5
+  },
+  {
+    "project_id": 1,
+    "name": "Optimize database queries",
+    "acceptance_criteria": "No query on the main dashboard takes longer than 200ms",
+    "priority": 4,
+    "story_point": 5
+  },
+  {
+    "project_id": 1,
+    "name": "Create admin user management",
+    "acceptance_criteria": "Admins can view, ban, and delete user accounts",
+    "priority": 3,
+    "story_point": 8
+  },
+  {
+    "project_id": 1,
+    "name": "Build activity feed",
+    "acceptance_criteria": "System logs and displays history of changes on each task",
+    "priority": 4,
+    "story_point": 5
+  },
+  {
+    "project_id": 1,
+    "name": "Implement global search",
+    "acceptance_criteria": "Search bar returns matching tasks, projects, and users",
+    "priority": 4,
+    "story_point": 8
+  },
+  {
+    "project_id": 1,
+    "name": "Design mobile-responsive navigation",
+    "acceptance_criteria": "Sidebar collapses into a hamburger menu on screens under 768px",
+    "priority": 3,
+    "story_point": 3
+  }
+]

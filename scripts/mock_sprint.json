@@ -1,0 +1,17 @@
+[
+  {"name": "Sprint 1: Foundation", "goal": "Setup initial architecture and DB schemas."},
+  {"name": "Sprint 2: Authentication", "goal": "Implement user login, registration, and RBAC."},
+  {"name": "Sprint 3: User Dashboard", "goal": "Create the main dashboard UI and API endpoints."},
+  {"name": "Sprint 4: Project Management", "goal": "Enable CRUD operations for projects."},
+  {"name": "Sprint 5: Task Tracking", "goal": "Implement task creation and assignment."},
+  {"name": "Sprint 6: Comments & Activity", "goal": "Add commenting system on tasks and activity logs."},
+  {"name": "Sprint 7: Notifications", "goal": "Setup email and in-app notification system."},
+  {"name": "Sprint 8: Reporting V1", "goal": "Develop basic velocity and burndown charts."},
+  {"name": "Sprint 9: Integrations", "goal": "Integrate with third-party tools like Slack/GitHub."},
+  {"name": "Sprint 10: Search & Filter", "goal": "Add global search and advanced filtering for tasks."},
+  {"name": "Sprint 11: Performance Optimization", "goal": "Optimize slow database queries and frontend rendering."},
+  {"name": "Sprint 12: Mobile Responsiveness", "goal": "Ensure all views are fully functional on mobile devices."},
+  {"name": "Sprint 13: Admin Panel", "goal": "Build out the system administration and monitoring panel."},
+  {"name": "Sprint 14: User Testing & QA", "goal": "Address bugs from initial UAT phase."},
+  {"name": "Sprint 15: Launch Prep", "goal": "Final security audits and deployment preparation."}
+]
