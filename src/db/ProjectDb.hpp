@@ -95,12 +95,26 @@ public:
             PREPARE(false),
             PARAM(oatpp::Int32, projectId),
             PARAM(oatpp::String, likeEmail));
-      
+
       QUERY(updateProductBacklog,
             "UPDATE ProductBacklog SET name = :backlog.name, acceptance_criteria = :backlog.acceptance_criteria, "
             "priority = :backlog.priority, story_point = :backlog.story_point WHERE id = :backlog.id",
             PREPARE(true),
             PARAM(oatpp::Object<ProductBacklogDto>, backlog));
+
+      QUERY(getManagersOfProject,
+            "SELECT id, name, email, member.role FROM Member "
+            "INNER JOIN AppUser ON Member.user_id = AppUser.id "
+            "WHERE project_id = :projectId AND member.role IN ('PO', 'SM')",
+            PREPARE(true),
+            PARAM(oatpp::Int32, projectId));
+
+      QUERY(getEmployeesOfProject,
+            "SELECT id, name, email, member.role FROM Member "
+            "INNER JOIN AppUser ON Member.user_id = AppUser.id "
+            "WHERE project_id = :projectId AND member.role = 'EM' ORDER BY id ASC LIMIT 20",
+            PREPARE(true),
+            PARAM(oatpp::Int32, projectId));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

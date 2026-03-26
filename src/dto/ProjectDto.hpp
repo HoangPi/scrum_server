@@ -52,6 +52,25 @@ class MemberInfo : public oatpp::DTO
     DTO_FIELD(String, email, "email");
 };
 
+class MemberInfoWithRoleDto : public oatpp::DTO
+{
+    DTO_INIT(MemberInfoWithRoleDto, DTO)
+
+    DTO_FIELD(Int32, id, "id");
+    DTO_FIELD(String, name, "name");
+    DTO_FIELD(String, email, "email");
+    DTO_FIELD(String, role, "role");
+};
+
+class MembersInProjectsDto : public oatpp::DTO
+{
+    DTO_INIT(MembersInProjectsDto, DTO)
+
+    DTO_FIELD(Vector<Object<MemberInfoWithRoleDto>>, PO, "PO");
+    DTO_FIELD(Vector<Object<MemberInfoWithRoleDto>>, SM, "SM");
+    DTO_FIELD(Vector<Object<MemberInfoWithRoleDto>>, EM, "EM");
+};
+
 class MemberDto : public oatpp::DTO
 {
 
