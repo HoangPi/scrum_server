@@ -91,7 +91,7 @@ public:
       QUERY(getUserByProjectIdAndEmail,
             "SELECT u.id, name, email FROM Member m "
             "INNER JOIN AppUser u ON u.id = m.user_id "
-            "WHERE u.email LIKE :likeEmail AND m.project_id = :projectId LIMIT 6",
+            "WHERE u.email ILIKE :likeEmail AND m.project_id = :projectId LIMIT 6",
             PREPARE(false),
             PARAM(oatpp::Int32, projectId),
             PARAM(oatpp::String, likeEmail));

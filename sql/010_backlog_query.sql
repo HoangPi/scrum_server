@@ -17,7 +17,7 @@ BEGIN
 	l_sql := 	'SELECT pb.id, pb.project_id, pb.name, pb.acceptance_criteria, '
             'pb.priority, pb.status::TEXT, pb.story_point '
         	'FROM ProductBacklog pb '
-        	'WHERE pb.project_id = ' || p_project_id || ' AND pb.name LIKE ''%' || p_name_filter || '%''';
+        	'WHERE pb.project_id = ' || p_project_id || ' AND pb.name ILIKE ''%' || p_name_filter || '%''';
 	IF p_include_finished IS NOT NULL THEN 
 		IF p_include_finished = false THEN
 			l_include_text := ' AND pb.status <> ''finished''::progress_type ';

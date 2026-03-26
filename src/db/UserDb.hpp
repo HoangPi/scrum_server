@@ -82,7 +82,7 @@ public:
             PARAM(oatpp::String, password));
 
       QUERY(getUserLikeEmail,
-            "SELECT id, name, email FROM AppUser WHERE email LIKE :email ORDER BY id ASC LIMIT 5;",
+            "SELECT id, name, email FROM AppUser WHERE email ILIKE :email ORDER BY id ASC LIMIT 5;",
             PREPARE(true),
             PARAM(oatpp::String, email));
 };
