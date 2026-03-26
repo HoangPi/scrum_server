@@ -322,6 +322,35 @@ public:
             Status::CODE_200,
             nullptr);
     }
+
+    ENDPOINT_INFO(getMembersOfProject)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("GET", "project/members", getMembersOfProject,
+             QUERY(Int32, projectId),
+             QUERY(String, type),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        oatpp::Vector<oatpp::Object<MemberInfoWithRoleDto>> result;
+        if (oatpp::String(type).equalsCI_ASCII("EM"))
+        {
+            result = m_projectService.getEmployeesOfProject(int(request->getBundleData<Int64>("userId")), projectId);
+        }
+        else
+        {
+            result = m_projectService.getManagersOfProject(int(request->getBundleData<Int64>("userId")), projectId);
+        }
+        return createDtoResponse(
+            Status::CODE_200,
+            result);
+    }
 };
 
 #include OATPP_CODEGEN_END(ApiController) //<- End Codegen

@@ -44,4 +44,6 @@ public:
     Int32 getBacklogCount(const Int32 &userId, const Int32 &projectId);
     void updateProductBacklog(const Int32 &userId, const Object<ProductBacklogDto> &backlog);
     void deleteProjectById(const Int32 &userId, const Int32 &projectId);
+    Vector<Object<MemberInfoWithRoleDto>> getManagersOfProject(const Int32 &userId, const Int32 &projectId);
+    Vector<Object<MemberInfoWithRoleDto>> getEmployeesOfProject(const Int32 &userId, const Int32 &projectId);
 };

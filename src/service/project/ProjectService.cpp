@@ -174,3 +174,19 @@ void ProjectService::deleteProjectById(const Int32 &userId, const Int32 &project
          {"project_id", projectId}});
     CHECK_SUCCESS;
 }
+
+Vector<Object<MemberInfoWithRoleDto>> ProjectService::getManagersOfProject(const Int32 &userId, const Int32 &projectId)
+{
+    m_sprintDatabase->checkMemberExist<EM, Pid>(userId, projectId);
+    auto dbResult = m_projectDatabase->getManagersOfProject(projectId);
+    CHECK_SUCCESS;
+    return dbResult->fetch<Vector<Object<MemberInfoWithRoleDto>>>();
+}
+
+Vector<Object<MemberInfoWithRoleDto>> ProjectService::getEmployeesOfProject(const Int32 &userId, const Int32 &projectId)
+{
+    m_sprintDatabase->checkMemberExist<EM, Pid>(userId, projectId);
+    auto dbResult = m_projectDatabase->getEmployeesOfProject(projectId);
+    CHECK_SUCCESS;
+    return dbResult->fetch<Vector<Object<MemberInfoWithRoleDto>>>();
+}
