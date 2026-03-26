@@ -183,10 +183,10 @@ Vector<Object<MemberInfoWithRoleDto>> ProjectService::getManagersOfProject(const
     return dbResult->fetch<Vector<Object<MemberInfoWithRoleDto>>>();
 }
 
-Vector<Object<MemberInfoWithRoleDto>> ProjectService::getEmployeesOfProject(const Int32 &userId, const Int32 &projectId)
+Vector<Object<MemberInfoWithRoleDto>> ProjectService::getEmployeesOfProject(const Int32 &userId, const Int32 &projectId, const Int32 &offset)
 {
     m_sprintDatabase->checkMemberExist<EM, Pid>(userId, projectId);
-    auto dbResult = m_projectDatabase->getEmployeesOfProject(projectId);
+    auto dbResult = m_projectDatabase->getEmployeesOfProject(projectId, offset);
     CHECK_SUCCESS;
     return dbResult->fetch<Vector<Object<MemberInfoWithRoleDto>>>();
 }

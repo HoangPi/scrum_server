@@ -112,9 +112,10 @@ public:
       QUERY(getEmployeesOfProject,
             "SELECT id, name, email, member.role FROM Member "
             "INNER JOIN AppUser ON Member.user_id = AppUser.id "
-            "WHERE project_id = :projectId AND member.role = 'EM' ORDER BY id ASC LIMIT 20",
+            "WHERE project_id = :projectId AND member.role = 'EM' ORDER BY id ASC LIMIT 20 OFFSET (20 * :offset)",
             PREPARE(true),
-            PARAM(oatpp::Int32, projectId));
+            PARAM(oatpp::Int32, projectId),
+            PARAM(oatpp::Int32, offset));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

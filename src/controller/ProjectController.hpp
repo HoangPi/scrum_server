@@ -335,13 +335,14 @@ public:
     }
     ENDPOINT("GET", "project/members", getMembersOfProject,
              QUERY(Int32, projectId),
+             QUERY(Int32, offset),
              QUERY(String, type),
              REQUEST(std::shared_ptr<IncomingRequest>, request))
     {
         oatpp::Vector<oatpp::Object<MemberInfoWithRoleDto>> result;
         if (oatpp::String(type).equalsCI_ASCII("EM"))
         {
-            result = m_projectService.getEmployeesOfProject(int(request->getBundleData<Int64>("userId")), projectId);
+            result = m_projectService.getEmployeesOfProject(int(request->getBundleData<Int64>("userId")), projectId, offset);
         }
         else
         {
