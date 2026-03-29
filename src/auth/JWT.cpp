@@ -5,12 +5,12 @@ JWT::JWT(const oatpp::String &secret, const oatpp::String &secret_refresh, const
                                                                                                           m_verifier(
                                                                                                               jwt::verify()
                                                                                                                   .allow_algorithm(jwt::algorithm::hs384(secret))
-                                                                                                                  .expires_at_leeway(10 * 60)
+                                                                                                                  .expires_at_leeway(30)
                                                                                                                   .with_issuer(issuer)),
                                                                                                           m_verifier_refresh(
                                                                                                               jwt::verify()
                                                                                                                   .allow_algorithm(jwt::algorithm::hs384(m_secret_refresh))
-                                                                                                                  .expires_at_leeway(10 * 60)
+                                                                                                                  .expires_at_leeway(30)
                                                                                                                   .with_issuer(issuer)),
                                                                                                           m_token_expire(getenv("JWT_EXPIRE")
                                                                                                                              ? atoi(getenv("JWT_EXPIRE"))

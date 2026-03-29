@@ -27,6 +27,7 @@ oatpp::Object<AuthDto> UserService::verifyUser(const oatpp::Object<LoginUserDto>
 
     auto auth = AuthDto::createShared();
     auth->token = m_jwt->createToken(payload);
+    auth->refresh = m_jwt->createToken(payload, true);
 
     return auth;
 }
