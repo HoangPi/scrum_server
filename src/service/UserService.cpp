@@ -27,8 +27,24 @@ oatpp::Object<AuthDto> UserService::verifyUser(const oatpp::Object<LoginUserDto>
 
     auto auth = AuthDto::createShared();
     auth->token = m_jwt->createToken(payload);
+    auth->refresh = m_jwt->createToken(payload, true);
 
     return auth;
+}
+
+oatpp::Object<AuthDto> UserService::refreshToken(const oatpp::String &refresh)
+{
+    auto auth = AuthDto::createShared();
+    try
+    {
+        auto payload = m_jwt->readAndVerifyRefreshToken(refresh);
+        auth->token = m_jwt->createToken(payload, false);
+        return auth;
+    }
+    catch (...)
+    {
+        throw oatpp::web::protocol::http::HttpError(Status::CODE_401, "Token has expired", {});
+    }
 }
 
 oatpp::Object<UserDto> UserService::getUserByUsername(const oatpp::String &username)

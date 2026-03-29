@@ -67,6 +67,7 @@ public:
   OATPP_CREATE_COMPONENT(std::shared_ptr<JWT>, jwt)([]{
     return std::make_shared<JWT>(
       getenv("JWT_SECRET_KEY") ? getenv("JWT_SECRET_KEY") : "UnsafeDefaultKey", 
+      getenv("JWT_SECRET_REFRESH") ? getenv("JWT_SECRET_REFRESH") : "UnsafeDefaultKey", 
       getenv("JWT_ISSUER") ? getenv("JWT_ISSUER") : "Oatpp-server");
   }());
 

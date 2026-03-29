@@ -118,6 +118,20 @@ public:
     return createDtoResponse(Status::CODE_200, m_userService.verifyUser(dto));
   }
 
+  ENDPOINT_INFO(refreshToken)
+  {
+    info->summary = "find user by username and password";
+
+    info->addConsumes<Object<LoginUserDto>>("application/json");
+    info->addResponse<Object<AuthDto>>(Status::CODE_200, "application/json");
+    info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+    info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+  }
+  ENDPOINT("POST", "users/refresh", refreshToken, BODY_DTO(Object<AuthDto>, dto))
+  {
+    return createDtoResponse(Status::CODE_200, m_userService.refreshToken(dto->refresh));
+  }
+
   // ENDPOINT_INFO(getUsers) {
   //   info->summary = "get all stored users";
 
