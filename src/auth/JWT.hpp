@@ -24,6 +24,8 @@ private:
     oatpp::String m_secret;
     oatpp::String m_secret_refresh;
     oatpp::String m_issuer;
+    oatpp::Int32 m_token_expire;
+    oatpp::Int32 m_refresh_expire;
     jwt::verifier<jwt::default_clock, jwt::traits::kazuho_picojson> m_verifier;
     jwt::verifier<jwt::default_clock, jwt::traits::kazuho_picojson> m_verifier_refresh;
 
@@ -32,7 +34,7 @@ public:
         const oatpp::String &secret_refresh,
         const oatpp::String &issuer);
 
-    oatpp::String createToken(const std::shared_ptr<Payload> &payload);
+    oatpp::String createToken(const std::shared_ptr<Payload> &payload, bool isRefresh = false);
 
     std::shared_ptr<Payload> readAndVerifyToken(const oatpp::String &token);
     std::shared_ptr<Payload> readAndVerifyRefreshToken(const oatpp::String &token);
