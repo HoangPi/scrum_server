@@ -22,6 +22,7 @@ private:
 public:
     oatpp::Object<ReturnUserDto> createUser(const oatpp::Object<UserDto> &dto);
     oatpp::Object<AuthDto> verifyUser(const oatpp::Object<LoginUserDto> &dto);
+    oatpp::Object<AuthDto> refreshToken(const oatpp::String &refresh);
     oatpp::Object<UserDto> getUserByUsername(const oatpp::String &username);
     void updateUser(const oatpp::Object<UserDto> &dto);
     void changePassword(const oatpp::Int64 &userId, const oatpp::String &oldPassword, const oatpp::String &newPassword);
