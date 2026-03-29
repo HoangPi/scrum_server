@@ -22,14 +22,18 @@ public:
 
 private:
     oatpp::String m_secret;
+    oatpp::String m_secret_refresh;
     oatpp::String m_issuer;
     jwt::verifier<jwt::default_clock, jwt::traits::kazuho_picojson> m_verifier;
+    jwt::verifier<jwt::default_clock, jwt::traits::kazuho_picojson> m_verifier_refresh;
 
 public:
     JWT(const oatpp::String &secret,
+        const oatpp::String &secret_refresh,
         const oatpp::String &issuer);
 
     oatpp::String createToken(const std::shared_ptr<Payload> &payload);
 
     std::shared_ptr<Payload> readAndVerifyToken(const oatpp::String &token);
+    std::shared_ptr<Payload> readAndVerifyRefreshToken(const oatpp::String &token);
 };
