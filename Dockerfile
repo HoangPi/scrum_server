@@ -20,7 +20,6 @@ RUN chmod +x utility/install-oatpp-modules.sh && \
     bash ./utility/install-oatpp-modules.sh Release
 
 # Install jwt-cpp from source
-ARG a=2
 RUN git clone https://github.com/Thalhammer/jwt-cpp.git /tmp/jwt-cpp && \
     cd /tmp/jwt-cpp && \
     mkdir build && cd build && \

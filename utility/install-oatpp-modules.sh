@@ -1,6 +1,12 @@
 #!/bin/sh
 
 BUILD_TYPE=$1
+DISABLE_OBJECT_COUNTER=OFF
+BUILD_TEST=ON
+if [ "$BUILD_TYPE" = "Release" ]; then
+  DISABLE_OBJECT_COUNTER=ON
+  BUILD_TEST=OFF
+fi
 
 if [ -z "$BUILD_TYPE" ]; then
     BUILD_TYPE="Debug"
@@ -35,7 +41,7 @@ cd build
 ############################################################################
 ## Flag '-DOATPP_SQLITE_AMALGAMATION=ON' used by oatpp-sqlite module only ##
 ############################################################################
-cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DOATPP_BUILD_TESTS=OFF ..
+cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DOATPP_BUILD_TESTS=${BUILD_TEST} -DOATPP_DISABLE_ENV_OBJECT_COUNTERS=${DISABLE_OBJECT_COUNTER} ..
 make install -j $NPROC
 
 cd ../../
