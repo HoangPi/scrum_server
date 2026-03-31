@@ -73,6 +73,7 @@ class SprintBacklogDetailDto : public oatpp::DTO
 
     DTO_FIELD(String, status);
     DTO_FIELD(String, notes);
+    DTO_FIELD(String, acceptanceCriteria, "acceptance_criteria");
     DTO_FIELD(Int32, estimatedStoryPoint, "estimated_story_point");
     DTO_FIELD(Int32, actualStoryPoint, "actual_story_point");
 };

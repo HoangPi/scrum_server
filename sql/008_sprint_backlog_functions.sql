@@ -93,6 +93,7 @@ RETURNS TABLE (
     email TEXT,
     status TEXT,
     notes TEXT,
+    acceptance_criteria TEXT,
     estimated_story_point INT,
     actual_story_point INT
 ) AS $$
@@ -100,7 +101,7 @@ BEGIN
     RETURN QUERY
     SELECT sb.id, sb.sprint_id, pb.id, pb.name, pb.priority,
         m.id, m.name::TEXT, m.email::TEXT, sb.status::TEXT, sb.notes, 
-        sb.estimated_story_point, sb.actual_story_point
+        pb.acceptance_criteria, sb.estimated_story_point, sb.actual_story_point
     FROM SprintBacklog sb
     INNER JOIN ProductBacklog pb ON pb.id = sb.backlog_item_id
     LEFT JOIN AppUser m ON m.id = sb.task_owner
