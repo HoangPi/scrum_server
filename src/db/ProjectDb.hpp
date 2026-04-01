@@ -116,6 +116,11 @@ public:
             PREPARE(true),
             PARAM(oatpp::Int32, projectId),
             PARAM(oatpp::Int32, offset));
+
+      QUERY(getProjectOverView,
+            "SELECT * FROM get_project_overview(:projectId)",
+            PREPARE(true),
+            PARAM(oatpp::Int32, projectId));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

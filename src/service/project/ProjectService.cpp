@@ -190,3 +190,11 @@ Vector<Object<MemberInfoWithRoleDto>> ProjectService::getEmployeesOfProject(cons
     CHECK_SUCCESS;
     return dbResult->fetch<Vector<Object<MemberInfoWithRoleDto>>>();
 }
+
+Vector<Object<ProjectOverviewDto>> ProjectService::getProjectOverView(const Int32 &userId, const Int32 &projectId)
+{
+    m_sprintDatabase->checkMemberExist<EM, Pid>(userId, projectId);
+    auto dbResult = m_projectDatabase->getProjectOverView(projectId);
+    CHECK_SUCCESS;
+    return dbResult->fetch<Vector<Object<ProjectOverviewDto>>>();
+}

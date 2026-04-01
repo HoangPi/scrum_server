@@ -352,6 +352,24 @@ public:
             Status::CODE_200,
             result);
     }
+    ENDPOINT_INFO(getProjectOverview)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("GET", "project/overview", getProjectOverview,
+             QUERY(Int32, projectId),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        return createDtoResponse(
+            Status::CODE_200,
+            m_projectService.getProjectOverView(int(request->getBundleData<Int64>("userId")), projectId));
+    }
 };
 
 #include OATPP_CODEGEN_END(ApiController) //<- End Codegen

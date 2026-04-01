@@ -95,4 +95,18 @@ class ProductBacklogDto : public oatpp::DTO
     DTO_FIELD(Int32, storyPoint, "story_point");
 };
 
+class ProjectOverviewDto : public oatpp::DTO
+{
+    DTO_INIT(ProjectOverviewDto, DTO)
+
+    DTO_FIELD(Int32, projectId, "project_id") = nullptr;
+    DTO_FIELD(Int32, totalProductBacklogs, "total_product_backlogs");
+    DTO_FIELD(Int32, finishedProductBacklogs, "finished_product_backlogs");
+    DTO_FIELD(Int32, totalStoryPoints, "total_story_points");
+    DTO_FIELD(Int32, finishedStoryPoints, "finished_story_points");
+    DTO_FIELD(Int32, totalUserStories, "total_user_stories");
+    DTO_FIELD(Int32, finishedUserStories, "finished_user_stories");
+    DTO_FIELD(Int32, failedUserStories, "failed_user_stories");
+};
+
 #include OATPP_CODEGEN_END(DTO)
