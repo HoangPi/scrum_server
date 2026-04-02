@@ -121,6 +121,13 @@ public:
             "SELECT * FROM get_project_overview(:projectId)",
             PREPARE(true),
             PARAM(oatpp::Int32, projectId));
+
+      QUERY(updateRole,
+            "UPDATE Member SET role = :newRole WHERE user_id = :userId AND project_id = :projectId",
+            PREPARE(true),
+            PARAM(oatpp::Int32, userId),
+            PARAM(oatpp::Int32, projectId),
+            PARAM(oatpp::String, newRole));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen

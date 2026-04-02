@@ -198,3 +198,11 @@ Vector<Object<ProjectOverviewDto>> ProjectService::getProjectOverView(const Int3
     CHECK_SUCCESS;
     return dbResult->fetch<Vector<Object<ProjectOverviewDto>>>();
 }
+
+void ProjectService::updateRole(const Int32 &userId, const Int32 &projectId, const Int32 &memberId, const String &newRole)
+{
+    m_sprintDatabase->checkMemberExist<PO, Pid>(userId, projectId);
+    m_sprintDatabase->checkMemberExist<EM, Pid>(memberId, projectId);
+    auto dbResult = m_projectDatabase->updateRole(memberId, projectId, newRole);
+    CHECK_SUCCESS;
+}

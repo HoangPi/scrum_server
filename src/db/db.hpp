@@ -32,6 +32,7 @@ public:
         migration.addFile(9, DATABASE_MIGRATIONS "/009_sprint_backlog_triggers.sql");
         migration.addFile(10, DATABASE_MIGRATIONS "/010_backlog_query.sql");
         migration.addFile(11, DATABASE_MIGRATIONS "/011_project_overview.sql");
+        migration.addFile(12, DATABASE_MIGRATIONS "/012_role_update.sql");
         // TODO - Add more migrations here.
         migration.migrate(); // <-- run migrations. This guy will throw on error.
 

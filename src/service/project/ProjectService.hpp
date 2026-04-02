@@ -47,4 +47,5 @@ public:
     Vector<Object<MemberInfoWithRoleDto>> getManagersOfProject(const Int32 &userId, const Int32 &projectId);
     Vector<Object<MemberInfoWithRoleDto>> getEmployeesOfProject(const Int32 &userId, const Int32 &projectId, const Int32 &offset);
     Vector<Object<ProjectOverviewDto>> getProjectOverView(const Int32 &userId, const Int32 &projectId);
+    void updateRole(const Int32 &userId, const Int32 &projectId, const Int32 &memberId, const String &newRole);
 };

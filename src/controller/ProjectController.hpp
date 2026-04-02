@@ -370,6 +370,28 @@ public:
             Status::CODE_200,
             m_projectService.getProjectOverView(int(request->getBundleData<Int64>("userId")), projectId));
     }
+    ENDPOINT_INFO(updateMemberRole)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("PUT", "project/role", updateMemberRole,
+             QUERY(Int32, projectId),
+             QUERY(Int32, memberId),
+             QUERY(String, role),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        OATPP_ASSERT_HTTP(oatpp::String(role).equalsCI_ASCII("EM") || oatpp::String(role).equalsCI_ASCII("SM"), Status::CODE_400, "Invalid role");
+        m_projectService.updateRole(int(request->getBundleData<Int64>("userId")), projectId, memberId, role);
+        return createResponse(
+            Status::CODE_200,
+            nullptr);
+    }
 };
 
 #include OATPP_CODEGEN_END(ApiController) //<- End Codegen
