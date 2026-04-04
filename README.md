@@ -5,14 +5,14 @@ Server of project management.
 ## Test accounts
 ```json
 {
-  username: "creator_alpha",
-  password: "^Fwnsu^YiVD[Q<|j"
+  "username": "creator_alpha",
+  "password": "^Fwnsu^YiVD[Q<|j"
 }
 ```
 ```json
 {
-  username: "regular_user",
-  password: "kV=z}'~KKTJ0TCmg"
+  "username": "regular_user",
+  "password": "kV=z}'~KKTJ0TCmg"
 }
 ```
 ## Overview
