@@ -52,13 +52,4 @@ RUN mkdir /usr/local/include/oatpp-1.4.0/oatpp-swagger
 # Expose application port (adjust if your app uses a different one)
 EXPOSE 8000
 
-# Run the server
-COPY --from=builder /app/build/crud-exe .
-COPY .env .
-COPY entrypoint.sh .
-
-# Make entrypoint script executable
-RUN chmod +x entrypoint.sh
-
-# Use entrypoint script instead of CMD
-ENTRYPOINT ["./entrypoint.sh"]
+CMD ["/app/crud-exe"]

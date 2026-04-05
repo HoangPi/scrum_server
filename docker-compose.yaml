@@ -12,4 +12,5 @@ services:
       - .env
     dns:
       - 1.1.1.1
-    command: ["/bin/sh"]
+    ports:
+      - 8000:8000/tcp
