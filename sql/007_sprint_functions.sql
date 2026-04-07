@@ -67,16 +67,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION prevent_finshed_sprint_update()
-RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION public.prevent_finshed_sprint_update()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
 BEGIN
     -- allowed expired end date update for mock data creation
     IF OLD.status = 'finished'::progress_type THEN
-        RAISE EXCEPTION 'Sprint has ended and cannot be modify futher';
+        RAISE EXCEPTION 'Sprint has ended and cannot be modify further';
     END IF;
+	IF NEW.status = 'finished'::progress_type THEN
+		UPDATE public.SprintBacklog SET status = 'failed'::progress_type
+			WHERE sprint_id = NEW.id AND status NOT IN ('finished'::progress_type, 'failed'::progress_type);
+	END IF;
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$function$;
 
 CREATE TRIGGER trg_check_sprint_status
 BEFORE UPDATE ON Sprint

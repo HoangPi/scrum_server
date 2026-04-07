@@ -51,4 +51,6 @@ public:
     void updateSprintBacklog(const Int32 &userId, const Object<UpdateSprintBacklogDto> &sprintBacklog);
     void bulkUpdateTasks(const Int32 &userId, const Object<UpdateTasksDto> &tasks);
     Vector<Object<TaskDto>> getTasksBySprintBacklogId(const Int32 &userId, const Int32 &sprintBacklogId);
+    void finishSprint(const Int32 &userId, const Int32 &sprintId);
+    void finishOverdueSprint(const Int32 &userId, const Int32 &projectId);
 };

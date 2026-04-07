@@ -154,3 +154,17 @@ Vector<Object<TaskDto>> SprintService::getTasksBySprintBacklogId(const Int32 &us
     CHECK_SUCCESS;
     return dbResult->fetch<Vector<Object<TaskDto>>>();
 }
+
+void SprintService::finishSprint(const Int32 &userId, const Int32 &sprintId)
+{
+    m_sprintDatabase->checkMemberExist<POSM, Sid>(userId, sprintId);
+    auto dbResult = m_sprintDatabase->finishSprint(sprintId);
+    CHECK_SUCCESS;
+}
+
+void SprintService::finishOverdueSprint(const Int32 &userId, const Int32 &projectId)
+{
+    m_sprintDatabase->checkMemberExist<POSM, Pid>(userId, projectId);
+    auto dbResult = m_sprintDatabase->finishOverdueSprint(projectId);
+    CHECK_SUCCESS;
+}

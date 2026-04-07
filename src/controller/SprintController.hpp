@@ -177,6 +177,42 @@ public:
     {
         return createDtoResponse(Status::CODE_200, m_sprintService.getTasksBySprintBacklogId(int(request->getBundleData<Int64>("userId")), sprintBacklogId));
     }
+
+    ENDPOINT_INFO(finishSprint)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("PUT", "sprints/finish/{sprintId}", finishSprint,
+             PATH(Int32, sprintId),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        m_sprintService.finishSprint(int(request->getBundleData<Int64>("userId")), sprintId);
+        return createResponse(Status::CODE_200, nullptr);
+    }
+
+    ENDPOINT_INFO(finishOverdueSprints)
+    {
+        info->summary = "Create new User";
+
+        info->addConsumes<Object<UserDto>>("application/json");
+
+        info->addResponse<Object<ReturnUserDto>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
+        info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+    }
+    ENDPOINT("PUT", "sprints/finishAll/{projectId}", finishOverdueSprints,
+             PATH(Int32, projectId),
+             REQUEST(std::shared_ptr<IncomingRequest>, request))
+    {
+        m_sprintService.finishOverdueSprint(int(request->getBundleData<Int64>("userId")), projectId);
+        return createResponse(Status::CODE_200, nullptr);
+    }
 };
 
 #include OATPP_CODEGEN_END(ApiController) //<- End Codegen

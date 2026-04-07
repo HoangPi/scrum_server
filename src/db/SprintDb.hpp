@@ -151,6 +151,16 @@ public:
             "SELECT * FROM get_task_by_sprint_backlog_id(:id) ORDER BY id ASC",
             PREPARE(true),
             PARAM(Int32, id));
+      
+      QUERY(finishSprint,
+            "UPDATE Sprint SET status = 'finished' WHERE id = :sprintId;",
+            PREPARE(true),
+            PARAM(Int32, sprintId));
+
+      QUERY(finishOverdueSprint,
+            "UPDATE Sprint SET status = 'finished' WHERE project_id = :projectId AND end_date < CURRENT_DATE AND status <> 'finished';",
+            PREPARE(true),
+            PARAM(Int32, projectId));
 };
 
 #include OATPP_CODEGEN_END(DbClient) //<- End Codegen
