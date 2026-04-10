@@ -8,6 +8,7 @@ AuthInterceptor::AuthInterceptor(const std::shared_ptr<JWT> &jwt)
     authEndpoints.route("POST", "users/refresh", false);
     authEndpoints.route("OPTIONS", "*", false);
     authEndpoints.route("GET", "/", false);
+    authEndpoints.route("GET", "/users/signout", false);
 
     authEndpoints.route("GET", "swagger/*", false);
     authEndpoints.route("GET", "api-docs/oas-3.0.0.json", false);

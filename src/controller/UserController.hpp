@@ -135,26 +135,36 @@ public:
   }
   ENDPOINT("POST", "users/refresh", refreshToken, REQUEST(std::shared_ptr<IncomingRequest>, request))
   {
-    auto cookiesHeader =  request->getHeader("Cookie");
-    OATPP_ASSERT_HTTP(cookiesHeader.get(), oatpp::web::protocol::http::Status::CODE_401, "Token has expired");
-    auto cookies = CookieParser::parse(cookiesHeader);
-    auto it = cookies.find("refresh");
-    OATPP_ASSERT_HTTP(it != cookies.end(), oatpp::web::protocol::http::Status::CODE_401, "Token has expired");
-    return createDtoResponse(Status::CODE_200, m_userService.refreshToken(oatpp::String(it->second)));
+    try
+    {
+      auto cookiesHeader = request->getHeader("Cookie");
+      OATPP_ASSERT_HTTP(cookiesHeader.get(), oatpp::web::protocol::http::Status::CODE_401, "Token has expired");
+      auto cookies = CookieParser::parse(cookiesHeader);
+      auto it = cookies.find("refresh");
+      OATPP_ASSERT_HTTP(it != cookies.end(), oatpp::web::protocol::http::Status::CODE_401, "Token has expired");
+      return createDtoResponse(Status::CODE_200, m_userService.refreshToken(oatpp::String(it->second)));
+    }
+    catch (...)
+    {
+      auto res = createResponse(oatpp::web::protocol::http::Status::CODE_401, "Token has expired");
+      res->putHeader("Set-Cookie", "refresh=; Path=/users/refresh; HttpOnly; Secure; SameSite=None; Max-Age=0");
+      return res;
+    }
   }
 
-  // ENDPOINT_INFO(getUsers) {
-  //   info->summary = "get all stored users";
+  ENDPOINT_INFO(signout)
+  {
+    info->summary = "get all stored users";
 
-  //   info->addResponse<oatpp::Object<UsersPageDto>>(Status::CODE_200, "application/json");
-  //   info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
-  // }
-  // ENDPOINT("GET", "users/offset/{offset}/limit/{limit}", getUsers,
-  //          PATH(UInt32, offset),
-  //          PATH(UInt32, limit))
-  // {
-  //   return createDtoResponse(Status::CODE_200, m_userService.getAllUsers(offset, limit));
-  // }
+    info->addResponse<oatpp::Object<UsersPageDto>>(Status::CODE_200, "application/json");
+    info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
+  }
+  ENDPOINT("GET", "users/signout", signout)
+  {
+    auto res = createResponse(Status::CODE_200, nullptr);
+    res->putHeader("Set-cookie", "refresh=; Path=/users/refresh; HttpOnly; Secure; SameSite=None; Max-Age=0");
+    return res;
+  }
 
   ENDPOINT_INFO(deleteUser)
   {
