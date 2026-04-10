@@ -7,6 +7,7 @@
 #include "oatpp/web/server/api/ApiController.hpp"
 #include "oatpp/web/mime/ContentMappers.hpp"
 #include "oatpp/macro/codegen.hpp"
+#include "CookieParser.hpp"
 
 #include OATPP_CODEGEN_BEGIN(ApiController) //<- Begin Codegen
 
@@ -115,7 +116,12 @@ public:
   }
   ENDPOINT("POST", "users/login", verifyUser, BODY_DTO(Object<LoginUserDto>, dto))
   {
-    return createDtoResponse(Status::CODE_200, m_userService.verifyUser(dto));
+    auto data = m_userService.verifyUser(dto);
+    auto res = createDtoResponse(Status::CODE_200, data);
+    auto refreshMaxAge = getenv("JWT_REFRESH_EXPIRE") ? getenv("JWT_REFRESH_EXPIRE") : "604800";
+    String refreshCookie = "refresh=" + data->refresh + "; Path=/users/refresh; HttpOnly; Secure; SameSite=Strict; Max-Age=" + refreshMaxAge;
+    res->putHeader("Set-Cookie", refreshCookie);
+    return res;
   }
 
   ENDPOINT_INFO(refreshToken)
@@ -127,9 +133,9 @@ public:
     info->addResponse<Object<StatusDto>>(Status::CODE_404, "application/json");
     info->addResponse<Object<StatusDto>>(Status::CODE_500, "application/json");
   }
-  ENDPOINT("POST", "users/refresh", refreshToken, BODY_DTO(Object<AuthDto>, dto))
+  ENDPOINT("POST", "users/refresh", refreshToken, REQUEST(std::shared_ptr<IncomingRequest>, request))
   {
-    return createDtoResponse(Status::CODE_200, m_userService.refreshToken(dto->refresh));
+    return createDtoResponse(Status::CODE_200, m_userService.refreshToken(oatpp::String(CookieParser::parse(request->getHeader("Cookie"))["refresh"])));
   }
 
   // ENDPOINT_INFO(getUsers) {
