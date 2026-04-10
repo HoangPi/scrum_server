@@ -119,7 +119,7 @@ public:
     auto data = m_userService.verifyUser(dto);
     auto res = createDtoResponse(Status::CODE_200, data);
     auto refreshMaxAge = getenv("JWT_REFRESH_EXPIRE") ? getenv("JWT_REFRESH_EXPIRE") : "604800";
-    String refreshCookie = "refresh=" + data->refresh + "; Path=/users/refresh; HttpOnly; Secure; SameSite=Strict; Max-Age=" + refreshMaxAge;
+    String refreshCookie = "refresh=" + data->refresh + "; Path=/users/refresh; HttpOnly; Secure; SameSite=None; Max-Age=" + refreshMaxAge;
     res->putHeader("Set-Cookie", refreshCookie);
     return res;
   }
@@ -135,7 +135,12 @@ public:
   }
   ENDPOINT("POST", "users/refresh", refreshToken, REQUEST(std::shared_ptr<IncomingRequest>, request))
   {
-    return createDtoResponse(Status::CODE_200, m_userService.refreshToken(oatpp::String(CookieParser::parse(request->getHeader("Cookie"))["refresh"])));
+    auto cookiesHeader =  request->getHeader("Cookie");
+    OATPP_ASSERT_HTTP(cookiesHeader.get(), oatpp::web::protocol::http::Status::CODE_401, "Token has expired");
+    auto cookies = CookieParser::parse(cookiesHeader);
+    auto it = cookies.find("refresh");
+    OATPP_ASSERT_HTTP(it != cookies.end(), oatpp::web::protocol::http::Status::CODE_401, "Token has expired");
+    return createDtoResponse(Status::CODE_200, m_userService.refreshToken(oatpp::String(it->second)));
   }
 
   // ENDPOINT_INFO(getUsers) {
