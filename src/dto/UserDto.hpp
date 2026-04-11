@@ -44,6 +44,7 @@ class LoginUserDto : public oatpp::DTO
 
   DTO_FIELD(String, username, "username");
   DTO_FIELD(String, password, "password");
+  DTO_FIELD(Boolean, persist, "persist") = false;
 };
 
 class NotificationDto : public oatpp::DTO

@@ -119,7 +119,12 @@ public:
     auto data = m_userService.verifyUser(dto);
     auto res = createDtoResponse(Status::CODE_200, data);
     auto refreshMaxAge = getenv("JWT_REFRESH_EXPIRE") ? getenv("JWT_REFRESH_EXPIRE") : "604800";
-    String refreshCookie = "refresh=" + data->refresh + "; Path=/users/refresh; HttpOnly; Secure; SameSite=None; Max-Age=" + refreshMaxAge;
+    String refreshCookie = "refresh=" + data->refresh + "; Path=/users/refresh; HttpOnly; Secure; SameSite=None";
+    if (dto->persist == true)
+    {
+      refreshCookie = refreshCookie + "; Max-Age=";
+      refreshCookie = refreshCookie + refreshMaxAge;
+    }
     res->putHeader("Set-Cookie", refreshCookie);
     return res;
   }
