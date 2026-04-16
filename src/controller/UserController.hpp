@@ -8,6 +8,7 @@
 #include "oatpp/web/mime/ContentMappers.hpp"
 #include "oatpp/macro/codegen.hpp"
 #include "CookieParser.hpp"
+#include <regex>
 
 #include OATPP_CODEGEN_BEGIN(ApiController) //<- Begin Codegen
 
@@ -45,6 +46,12 @@ public:
   ENDPOINT("POST", "users", createUser,
            BODY_DTO(Object<UserDto>, userDto))
   {
+    std::regex passwordRegex("^(?=.*[A-Z])(?=.*\\d).{6,}$");
+    std::string defaultStr("");
+    OATPP_ASSERT_HTTP(
+        std::regex_match(userDto->password.getValue(defaultStr), passwordRegex),
+        Status::CODE_400,
+        "Password must contains at least 6 characters, 1 upper case and 1 digit");
     return createDtoResponse(Status::CODE_200, m_userService.createUser(userDto));
   }
 
